@@ -6,7 +6,6 @@
  * \date 8 Octobre 2021
  */
 #include "newton.h"
-#include "liste.h"
 
 /**
  * \fn Liste ResolutionParNewton(Liste points)
@@ -17,8 +16,8 @@
  * \param nbMaillon - nbMaillon is the number of the maillon we want to destroy
  * \return void - l is a pointer, no need to return it
  */
-Liste ResolutionParNewton(Liste points){
-  Liste Solution = creerListe();
+polynome *ResolutionParNewton(Liste points){
+  polynome *Solution = creePolynome(int maxDeg)
 
   return Solution;
 }

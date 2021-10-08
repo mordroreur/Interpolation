@@ -11,6 +11,6 @@
 #include <stdio.h>
 
 #include "point.h"
-
+#include "liste.h"
 
 #endif /* NEWToN_HEADER_ */
