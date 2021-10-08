@@ -7,9 +7,14 @@
  */
 #include "lagrange.h"
 
-float calculLi(int nombredepoint, int numero, Liste points)
+polynome *calculLi(int nombredepoint, int numero, Liste points)
 {
   /* point;  transfore liste en tab*/
+
+  float **pointstab;
+
+  pointstab = ListeToTabsPoints(points);
+
   int i;
   float resultat;
   polynome *Li = creePolynome(0);
@@ -20,21 +25,31 @@ float calculLi(int nombredepoint, int numero, Liste points)
   {
     if (i == numero)
     {
+      printf("Test boucle\n");
     }
     else
     {
-      /* Li = multPolynome(Li, */
-      /* (susPolynome(x, transformefloatenpoly(float unfloat)))); */
+      Li = multPolynome(Li, x);
+      /* multPolynome(susPolynome(x, transformefloatenpoly(pointstab[0][i])), */
+      /* transformefloatenpoly( */
+      /* 1 / (pointstab[0][numero] - pointstab[0][i])))); */
     }
   }
+  return Li;
 }
 
-float calculLagrange(int nombredepoint, point *serie)
+polynome *calculLagrange(Liste points)
 {
   int i;
-  float resultat;
-  for (i = 0; i < nombredepoint; ++i)
+  polynome *fonction = creePolynome(ListLenght(points));
+  float **pointstab;
+  pointstab = ListeToTabsPoints(points);
+
+  for (i = 0; i < ListLenght(points); ++i)
   {
-    /* resultat = resultat + serie[i].y * calculLi(nombredepoint, i, serie); */
+    fonction = addPolynome(
+        fonction, multPolynome(transformefloatenpoly(pointstab[1][i]),
+                               calculLi(ListLenght(points), i, points)));
   }
+  return fonction;
 }

@@ -13,4 +13,7 @@
 
 #include "polynome.h"
 
+polynome *calculLi(int nombredepoint, int numero, Liste points);
+polynome *calculLagrange(Liste points);
+
 #endif /* LAGRANGE_HEADER_ */
