@@ -10,7 +10,7 @@
 #define POINT_HEADER_
 
 #include <stdio.h>
-
+#include <stdlib.h>
 
 /**
  * \brief Structure correspondante à un point.
@@ -19,7 +19,8 @@
  * - x : La coordonnée en x du point.
  * - y : La coordonnée en y du point.
  */
-typedef struct point{
+typedef struct point
+{
   float x;
   float y;
 } point;
@@ -29,11 +30,10 @@ typedef struct Polynome{
   int maxDeg;
 }polynome;
 
-
-polynome creePolynome(int maxDeg);
+polynome *creePolynome(int maxDeg);
 void destroyPolynome(polynome *p);
-Polynome *addPolynome(polynome *p1, polynome *p2);
-Polynome *susPolynome(polynome *p1, polynome *p2);
-Polynome *multPolynome(polynome *p1, polynome *p2);
+polynome *addPolynome(polynome *p1, polynome *p2);
+polynome *susPolynome(polynome *p1, polynome *p2);
+polynome *multPolynome(polynome *p1, polynome *p2);
 
 #endif
