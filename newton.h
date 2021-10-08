@@ -13,4 +13,7 @@
 #include "polynome.h"
 #include "listePoint.h"
 
+
+polynome *ResolutionParNewton(Liste lstpoints);
+
 #endif /* NEWToN_HEADER_ */
