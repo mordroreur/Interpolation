@@ -1,0 +1,8 @@
+* Readme
+** Newton
+** Lagrange
+
+1. input "nombre de points",
+2. première boucle de 0 à nbpoint, stocker les valeurs dans une structure point (abs, ordonnée)
+3. 
+4. rentrer les valeurs des jeux de données
