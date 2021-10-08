@@ -1,6 +1,6 @@
 /*!
  * \file liste.c
- * \brief Fichier contenant toute les fonction utile sur les listes.
+ * \brief File containing all the function used on list.
  * \author Payard - Laurencot
  * \version pré-alpha
  * \date 8 Octobre 2021
@@ -9,10 +9,10 @@
 
 /**
  * \fn Liste creerListe()
- * \brief Fonction principale du programme
+ * \brief Function that create a list.
  * 
  * 
- * \return 0 - Ce qui termine le programme
+ * \return l - l is a properly initialized list
  */
 Liste creerListe(){
   Liste l;
@@ -20,6 +20,15 @@ Liste creerListe(){
   return l;
 }
 
+/**
+ * \fn void detruireListe(Liste l)
+ * \brief Function that free all the part of a list.
+ * This function is very useful to avoid all memory leak while playing with
+ * list. After the use of this function, you can reuse or let the pointer on a
+ * list you sent here.
+ * \param l - l is the list we work on 
+ * \return void
+ */
 void detruireListe(Liste l){
   Maillon *old;
   Maillon *new;
@@ -32,14 +41,29 @@ void detruireListe(Liste l){
   }
 }
 
-void ajouteDebut(Liste *l, int n){
+/**
+ * \fn void ajouteDebut(Liste *l, void *n)
+ * \brief Function that put a value as the first value of the list
+ * \param l - l is the list we work on
+ * \param n - the value we want to add to the list
+ * \return void
+ */
+void ajouteDebut(Liste *l, void *n){
   Maillon *M = (Maillon *)malloc(sizeof(Maillon));
   M->val = n;
   M->suiv = l->first;
   l->first = M;
 }
 
-void ajouteFin(Liste *l, int n){
+/**
+ * \fn void ajouteFin(Liste *l, void *n)
+ * \brief Function that put a value as the last value of the list
+ *
+ * \param l - l is the list we work on
+ * \param n - the value we want to add to the list
+ * \return void
+ */
+void ajouteFin(Liste *l, void *n){
   Maillon *M = (Maillon *)malloc(sizeof(Maillon));
   Maillon *new;
 
@@ -56,6 +80,13 @@ void ajouteFin(Liste *l, int n){
   }
 }
 
+/**
+ * \fn void afficheListe(Liste l)
+ * \brief Function that print every element on the terminal.
+ * This function is mostly useful in debugging.
+ * \param l - l is the list we work on 
+ * \return void
+ */
 void afficheListe(Liste l){
   Maillon *new;
   
@@ -72,7 +103,14 @@ void afficheListe(Liste l){
     printf("\n");
   }
 }
-
+/**
+ * \fn int ListLenght(Liste l)
+ * \brief Function that get the size of a list.
+ * Warning : This function as to read every element of the list, for big list it
+ * can be pretty slow.
+ * \param l - l is the list we work on 
+ * \return result - result is the list length
+ */
 int ListLenght(Liste l){
   Maillon *new;
   int result = 0;
@@ -88,7 +126,14 @@ int ListLenght(Liste l){
   return result;
 }
 
-
+/**
+ * \fn void supprDebut(Liste *l)
+ * \brief Function that remove the first element of the list if there is one.
+ *
+ *
+ * \param *l - l is the pointer of the list we work on 
+ * \return void - l is a pointer, no need to return it
+ */
 void supprDebut(Liste *l){
   Maillon *new;
   if(l->first != NULL){
@@ -98,6 +143,14 @@ void supprDebut(Liste *l){
   }
 }
 
+/**
+ * \fn void supprFin(Liste *l)
+ * \brief Function that remove the last element of the list if there is one.
+ *
+ *
+ * \param *l - l is the pointer of the list we work on 
+ * \return void - l is a pointer, no need to return it
+ */
 void supprFin(Liste *l){
   Maillon *new;
   if(l->first != NULL){
@@ -110,7 +163,16 @@ void supprFin(Liste *l){
   }
 }
 
-void supprValeur(Liste *l, int val){
+/**
+ * \fn void supprValeur(Liste *l, void *val)
+ * \brief Function that remove one element of the list if there is one with the
+ * same value as the one passed in parameter.
+ *
+ * \param val - val is the value we want to destroy in the list
+ * \param *l - l is the pointer of the list we work on 
+ * \return void - l is a pointer, no need to return it
+ */
+void supprValeur(Liste *l, void *val){
   Maillon *new;
   Maillon *old;
   if(l->first != NULL){
@@ -130,6 +192,16 @@ void supprValeur(Liste *l, int val){
   }
 }
 
+/**
+ * \fn void supprMaillon(Liste *l, int nbMaillon)
+ * \brief Function that remove the element of the list if there is one that as a
+ * number equal to nbMaillon, with value 0 for the first.
+ *
+ *
+ * \param *l - l is the pointer of the list we work on
+ * \param nbMaillon - nbMaillon is the number of the maillon we want to destroy
+ * \return void - l is a pointer, no need to return it
+ */
 void supprMaillon(Liste *l, int nbMaillon){
   Maillon *new;
   Maillon *old;

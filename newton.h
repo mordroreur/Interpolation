@@ -1,6 +1,6 @@
 /*!
  * \file newton.h
- * \brief Header du newton.h
+ * \brief Header file for newton.c.
  * \author Laurencot
  * \version pré-alpha
  * \date 8 Octobre 2021

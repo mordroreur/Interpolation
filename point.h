@@ -1,3 +1,4 @@
+
 /*!
  * \file point.h
  * \brief Header du point.c
@@ -21,6 +22,18 @@
 typedef struct point{
   float x;
   float y;
-}point;
+} point;
+
+typedef struct Polynome{
+  float *p;
+  int maxDeg;
+}polynome;
+
+
+polynome creePolynome(int maxDeg);
+void destroyPolynome(polynome *p);
+Polynome *addPolynome(polynome *p1, polynome *p2);
+Polynome *susPolynome(polynome *p1, polynome *p2);
+Polynome *multPolynome(polynome *p1, polynome *p2);
 
 #endif
