@@ -82,7 +82,7 @@ void ajouteFin(Liste *l, void *n){
 
 /**
  * \fn void afficheListe(Liste l)
- * \brief Function that print every element on the terminal.
+ * \brief Function that print the pointer on every element on the terminal.
  * This function is mostly useful in debugging.
  * \param l - l is the list we work on 
  * \return void
@@ -94,10 +94,10 @@ void afficheListe(Liste l){
   if(new == NULL){
     printf("La suite est vide.\n");
   }else{
-    printf("La suite vaut : %d", new->val);
+    printf("La suite vaut : %p", new->val);
     new = new->suiv;
     while(new != NULL) {
-      printf(", %d", new->val);
+      printf(", %p", new->val);
       new = new->suiv;
     }
     printf("\n");

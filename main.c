@@ -26,10 +26,14 @@
  */
 int main()
 {
-  int x; /**< Description de x. */
+
+
   polynome *p1 = creePolynomedemande();
   polynome *p2 = creePolynomedemande();
   polynome *poly = multPolynome(p1, p2);
   affichepolynome(poly);
+
+  //  int x; /**< Description de x. */
+
   return 0;
 }

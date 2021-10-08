@@ -1,0 +1,62 @@
+[
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-o",
+            "point.o",
+            "point.c"
+        ],
+        "directory": "/home/mordroreur/Documents/interpolation",
+        "file": "point.c"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-o",
+            "liste.o",
+            "liste.c"
+        ],
+        "directory": "/home/mordroreur/Documents/interpolation",
+        "file": "liste.c"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-o",
+            "lagrange.o",
+            "lagrange.c"
+        ],
+        "directory": "/home/mordroreur/Documents/interpolation",
+        "file": "lagrange.c"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-o",
+            "newton.o",
+            "newton.c"
+        ],
+        "directory": "/home/mordroreur/Documents/interpolation",
+        "file": "newton.c"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-o",
+            "main.o",
+            "main.c"
+        ],
+        "directory": "/home/mordroreur/Documents/interpolation",
+        "file": "main.c"
+    }
+]

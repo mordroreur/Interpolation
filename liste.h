@@ -64,7 +64,7 @@ void ajouteDebut(Liste *l, void *n);
 void ajouteFin(Liste *l, void *n);
 /**
  * \fn void afficheListe(Liste l)
- * \brief Function that print every element on the terminal.
+ * \brief Function that print the pointer on every element on the terminal.
  * This function is mostly useful in debugging.
  * \param l - l is the list we work on 
  * \return void
