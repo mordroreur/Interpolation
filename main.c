@@ -16,6 +16,8 @@
   \n Donc je peu pas vous dire...
  */
 #include "main.h"
+#include "liste.h"
+#include "point.h"
 
 /**
  * \fn int main ()
@@ -28,11 +30,31 @@ int main()
 {
 
 
-  polynome *p1 = creePolynomedemande();
-  polynome *p2 = creePolynomedemande();
-  polynome *poly = multPolynome(p1, p2);
-  affichepolynome(poly);
+  //polynome *p1 = creePolynomedemande();
+  //polynome *p2 = creePolynomedemande();
+  //polynome *poly = multPolynome(p1, p2);
+  //affichepolynome(poly);
 
+  Liste l = creerListe();
+
+  point p; p.x = 0; p.y = 0;
+  point k; k.x = 2; k.y = 4;
+  point e; e.x = 4; e.y = 0;
+  point m; m.x = 6; m.y = 4;
+  ajouteDebut(&l, p);
+  ajouteDebut(&l, k);
+  ajouteDebut(&l, e);
+  ajouteDebut(&l, m);
+
+  float **points;
+
+  points = ListeToTabsPoints(l);
+
+  for(int i = 0; i < 4; i++){
+    printf("point : %f, %f\n", points[0][i], points[1][i]);
+  }
+
+  
   //  int x; /**< Description de x. */
 
   return 0;

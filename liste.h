@@ -8,8 +8,23 @@
 #ifndef LISTE_HEADER_
 #define LISTE_HEADER_
 
+
 #include <stdio.h>
 #include <stdlib.h>
+
+/**
+ * \brief Structure correspondante à un point.
+ *
+ * Cette structure est un point, donc elle contient :
+ * - x : La coordonnée en x du point.
+ * - y : La coordonnée en y du point.
+ */
+typedef struct point
+{
+  float x;
+  float y;
+} point;
+
 /**
  * \brief Structure corresponding to every element of a list.
  * This structure is for every element of the list.
@@ -19,7 +34,7 @@
  */
 typedef struct Maillon{
   struct Maillon *suiv;
-  void *val;
+  point val;
 }Maillon;
 
 /**
@@ -53,7 +68,7 @@ void detruireListe(Liste l);
  * \param n - the value we want to add to the list
  * \return void
  */
-void ajouteDebut(Liste *l, void *n);
+void ajouteDebut(Liste *l, point n);
 /**
  * \fn void ajouteFin(Liste *l, void *n)
  * \brief Function that put a value as the last value of the list
@@ -61,7 +76,7 @@ void ajouteDebut(Liste *l, void *n);
  * \param n - the value we want to add to the list
  * \return void
  */
-void ajouteFin(Liste *l, void *n);
+void ajouteFin(Liste *l, point n);
 /**
  * \fn void afficheListe(Liste l)
  * \brief Function that print the pointer on every element on the terminal.
@@ -101,7 +116,7 @@ void supprFin(Liste *l);
  * \param *l - l is the pointer of the list we work on 
  * \return void - l is a pointer, no need to return it
  */
-void supprValeur(Liste *l, void *val);
+void supprValeur(Liste *l, point val);
 /**
  * \fn void supprMaillon(Liste *l, int nbMaillon)
  * \brief Function that remove the element of the list if there is one that as a
@@ -112,5 +127,7 @@ void supprValeur(Liste *l, void *val);
  */
 void supprMaillon(Liste *l, int nbMaillon);
 
+
+float **ListeToTabsPoints(Liste l);
 
 #endif /* LISTE_HEADER_ */

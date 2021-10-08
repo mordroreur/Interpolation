@@ -23,7 +23,7 @@ polynome *ResolutionParNewton(Liste points){
   for(int i = 0; i < pointNB-1; i++){
     f[i] = (float *)malloc(sizeof(float) * (pointNB-1-i));
   }
-
+  
 
   for(int i = 0; i < pointNB-1; i++){
     for(int j = 0; j < pointNB-1-i; j++){

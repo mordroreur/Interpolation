@@ -42,15 +42,16 @@ void detruireListe(Liste l){
 }
 
 /**
- * \fn void ajouteDebut(Liste *l, void *n)
+ * \fn void ajouteDebut(Liste *l, point n)
  * \brief Function that put a value as the first value of the list
  * \param l - l is the list we work on
  * \param n - the value we want to add to the list
  * \return void
  */
-void ajouteDebut(Liste *l, void *n){
+void ajouteDebut(Liste *l, point n){
   Maillon *M = (Maillon *)malloc(sizeof(Maillon));
-  M->val = n;
+  M->val.x = n.x;
+  M->val.y = n.y;
   M->suiv = l->first;
   l->first = M;
 }
@@ -63,11 +64,12 @@ void ajouteDebut(Liste *l, void *n){
  * \param n - the value we want to add to the list
  * \return void
  */
-void ajouteFin(Liste *l, void *n){
+void ajouteFin(Liste *l, point n){
   Maillon *M = (Maillon *)malloc(sizeof(Maillon));
   Maillon *new;
 
-  M->val = n;
+  M->val.x = n.x;
+  M->val.y = n.y;
   M->suiv = NULL;
   if(l->first == NULL){
     l->first = M;
@@ -94,10 +96,10 @@ void afficheListe(Liste l){
   if(new == NULL){
     printf("La suite est vide.\n");
   }else{
-    printf("La suite vaut : %p", new->val);
+    printf("La suite vaut : (%f, %f)", new->val.x, new->val.y);
     new = new->suiv;
     while(new != NULL) {
-      printf(", %p", new->val);
+      printf(", (%f, %f)", new->val.x, new->val.y);
       new = new->suiv;
     }
     printf("\n");
@@ -172,15 +174,15 @@ void supprFin(Liste *l){
  * \param *l - l is the pointer of the list we work on 
  * \return void - l is a pointer, no need to return it
  */
-void supprValeur(Liste *l, void *val){
+void supprValeur(Liste *l, point val){
   Maillon *new;
   Maillon *old;
   if(l->first != NULL){
-    if(l->first->val == val){
+    if((l->first->val.x == val.x) && (l->first->val.y == val.y)){
       supprDebut(l);
     }else{
       new = l->first;
-      while ((new->suiv != NULL) && (new->suiv->val != val)) {
+      while ((new->suiv != NULL) && ((new->suiv->val.x != val.x) || (new->suiv->val.y != val.y))) {
 	new = new->suiv;
       }
       if(new->suiv != NULL){
@@ -222,4 +224,24 @@ void supprMaillon(Liste *l, int nbMaillon){
       new->suiv = old;
     }
   }
+}
+
+
+float **ListeToTabsPoints(Liste l){
+  int n = ListLenght(l);
+  float **res = (float **)malloc(2*sizeof(float *));
+  res[0] = (float *)malloc(n*sizeof(float));
+  res[1] = (float *)malloc(n*sizeof(float));
+
+  Maillon *m = l.first;
+  
+  for(int i = 0; i < n; i++){
+    res[0][i] = m->val.x;
+    res[1][i] = m->val.y;
+    m = m->suiv;
+  }
+
+  return res;
+
+  
 }

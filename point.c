@@ -7,6 +7,7 @@
  */
 #include "point.h"
 
+
 polynome *creePolynome(int maxDeg)
 {
   int i;
@@ -124,3 +125,6 @@ multPolynome(polynome *p1, polynome *p2)
   destroyPolynome(p2);
   return poly;
 }
+
+
+
