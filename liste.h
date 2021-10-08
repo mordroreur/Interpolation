@@ -47,7 +47,7 @@ Liste creerListe();
  */
 void detruireListe(Liste l);
 /**
- * \fn void ajouteDebut(Liste *l, int n)
+ * \fn void ajouteDebut(Liste *l, void *n)
  * \brief Function that put a value as the first value of the list
  * \param l - l is the list we work on
  * \param n - the value we want to add to the list
@@ -55,7 +55,7 @@ void detruireListe(Liste l);
  */
 void ajouteDebut(Liste *l, void *n);
 /**
- * \fn void ajouteFin(Liste *l, int n)
+ * \fn void ajouteFin(Liste *l, void *n)
  * \brief Function that put a value as the last value of the list
  * \param l - l is the list we work on
  * \param n - the value we want to add to the list
