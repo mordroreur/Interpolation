@@ -31,7 +31,10 @@ typedef struct Polynome{
 }polynome;
 
 polynome *creePolynome(int maxDeg);
+polynome *creePolynomedemande();
 void destroyPolynome(polynome *p);
+void affichepolynome(polynome *p);
+polynome *transformefloatenpoly(float unfloat);
 polynome *addPolynome(polynome *p1, polynome *p2);
 polynome *susPolynome(polynome *p1, polynome *p2);
 polynome *multPolynome(polynome *p1, polynome *p2);

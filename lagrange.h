@@ -8,9 +8,9 @@
 #ifndef LAGRANGE_HEADER_
 #define LAGRANGE_HEADER_
 
+#include "liste.h"
 #include <stdio.h>
 
 #include "point.h"
-void mafonction();
 
 #endif /* LAGRANGE_HEADER_ */
