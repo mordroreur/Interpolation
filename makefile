@@ -1,6 +1,6 @@
 CC=gcc
-LDFLAG=$(shell sdl-config --cflags --libs) 
-CFLAG=-Wall $(shell sdl-config --cflags --libs) 
+LDFLAG=
+CFLAG=-Wall
 EXEC=res
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)
@@ -26,6 +26,9 @@ mrproper: clean
 
 clangd: clean
 	bear make
+
+run: $(EXEC)
+	./$(EXEC)
 
 doxy:
 	doxygen Doxyfile
