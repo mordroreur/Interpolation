@@ -1,0 +1,39 @@
+
+
+
+* Config latex                                                       :ignore:
+
+#+LANGUAGE:french
+#+OPTIONS: toc:nil %pour ne pas afficher la tdm avant la page de garde
+
+
+#+SETUPFILE:Latex/Setupfile/Styleslatex/org-plain-latex.org
+
+
+#+SETUPFILE:Latex/Setupfile/Pagedegarde/Pagedegarde1/pourpagedegarde1.org
+
+
+
+#+Latex_header:\usepackage{lastpage} %les latex header ici
+
+
+
+#+BEGIN_EXPORT latex
+%chargement de la page de garde
+\input{$PWD/Latex/Setupfile/Pagedegarde/Pagedegarde1/pagedegarde1.org}
+#+END_EXPORT
+
+
+
+
+#+TOC: headlines 2 % afficher tdm ici, nombre de "sous titre", 3= va jusqu'à titre 3
+
+** Rappel rapide des méthodes
+
+** Présentation des programmes commentés
+
+** Présentation des matrices test au dos de la feuille
+
+** Commentaires des jeux d'essais à partir de données relatives
+
+** Conclusion sur les méthodes

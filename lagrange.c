@@ -29,7 +29,10 @@ polynome *calculLi(int nombredepoint, int numero, Liste points)
     }
     else
     {
-      Li = multPolynome(Li, x);
+
+      Li = susPolynome(x, transformefloatenpoly(pointstab[0][i]));
+
+      /* Li = multPolynome(Li, x); */
       /* multPolynome(susPolynome(x, transformefloatenpoly(pointstab[0][i])), */
       /* transformefloatenpoly( */
       /* 1 / (pointstab[0][numero] - pointstab[0][i])))); */
@@ -47,9 +50,11 @@ polynome *calculLagrange(Liste points)
 
   for (i = 0; i < ListLenght(points); ++i)
   {
-    fonction = addPolynome(
-        fonction, multPolynome(transformefloatenpoly(pointstab[1][i]),
-                               calculLi(ListLenght(points), i, points)));
+
+    fonction = calculLi(ListLenght(points), i, points);
+    /* fonction = addPolynome( */
+    /* fonction, multPolynome(transformefloatenpoly(pointstab[1][i]), */
+    /* calculLi(ListLenght(points), i, points))); */
   }
   return fonction;
 }

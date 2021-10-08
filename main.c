@@ -27,10 +27,29 @@
 int main()
 {
 
-  polynome *p1 = creePolynomedemande();
-  polynome *p2 = creePolynomedemande();
-  polynome *poly = multPolynome(p1, p2);
-  affichepolynome(poly);
+  /* polynome *p1 = creePolynomedemande(); */
+  /* polynome *p2 = creePolynome(0); */
+  /* polynome *poly = multPolynome(p1, p2); */
+  /* printf("Test\n"); */
+
+  /* affichepolynome(poly); */
+
+  /* Test des différentes fonctions : */
+  float flo = 3.0;
+  polynome *machin = transformefloatenpoly(flo);
+  printf("le truc polynome transformé est \n");
+
+  affichepolynome(machin);
+
+  /* int a = 10; */
+  /* printf("le truc polynome transformé est %f  d'indice %d \n", machin->p[a],
+   * a); */
+  /* int i = 1000; */
+  /* while (machin->p[i] == 0) */
+  /* { */
+  /*   printf("le truc polynome transformé est %d \n", i); */
+  /*   i++; */
+  /* } */
 
   Liste l = creerListe();
 
@@ -55,10 +74,10 @@ int main()
 
   points = ListeToTabsPoints(l);
 
-  for (int i = 0; i < 4; i++)
-  {
-    printf("point : %f, %f\n", points[0][i], points[1][i]);
-  }
+  /* for (int i = 0; i < 4; i++) */
+  /* { */
+  /* printf("point : %f, %f\n", points[0][i], points[1][i]); */
+  /* } */
 
   /* polynome *fonction = calculLagrange(l); */
   /* affichepolynome(fonction); */
