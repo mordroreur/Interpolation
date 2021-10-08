@@ -8,9 +8,9 @@
 #ifndef LAGRANGE_HEADER_
 #define LAGRANGE_HEADER_
 
-#include "liste.h"
+#include "listePoint.h"
 #include <stdio.h>
 
-#include "point.h"
+#include "polynome.h"
 
 #endif /* LAGRANGE_HEADER_ */

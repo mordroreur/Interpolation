@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include "point.h"
-#include "liste.h"
+#include "polynome.h"
+#include "listePoint.h"
 
 #endif /* NEWToN_HEADER_ */
