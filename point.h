@@ -1,10 +1,23 @@
+/*!
+ * \file point.h
+ * \brief Header du point.c
+ * \author Payard - Laurencot
+ * \version pré-alpha
+ * \date 8 Octobre 2021
+ */
 #ifndef POINT_HEADER_
 #define POINT_HEADER_
 
 #include <stdio.h>
 
 
-
+/**
+ * \brief Structure correspondante à un point.
+ *
+ * Cette structure est un point, donc elle contient :
+ * - x : La coordonnée en x du point.
+ * - y : La coordonnée en y du point.
+ */
 typedef struct point{
   float x;
   float y;

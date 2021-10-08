@@ -1,6 +1,19 @@
+/*!
+ * \file liste.c
+ * \brief Fichier contenant toute les fonction utile sur les listes.
+ * \author Payard - Laurencot
+ * \version pré-alpha
+ * \date 8 Octobre 2021
+ */
 #include "liste.h"
-#include <stdlib.h>
 
+/**
+ * \fn Liste creerListe()
+ * \brief Fonction principale du programme
+ * 
+ * 
+ * \return 0 - Ce qui termine le programme
+ */
 Liste creerListe(){
   Liste l;
   l.first = NULL;
