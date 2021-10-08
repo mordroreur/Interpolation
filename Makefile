@@ -27,8 +27,9 @@ mrproper: clean
 clangd: clean
 	bear make
 
+doxy:
+	doxygen Doxyfile
+
 run: $(EXEC)
 	./$(EXEC)
 
-doxy:
-	doxygen Doxyfile

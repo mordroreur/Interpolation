@@ -27,6 +27,5 @@
 int main()
 {
   int x; /**< Description de x. */
-  printf("Hello");
   return 0;
 }

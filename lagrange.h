@@ -11,5 +11,6 @@
 #include <stdio.h>
 
 #include "point.h"
+void mafonction();
 
 #endif /* LAGRANGE_HEADER_ */
