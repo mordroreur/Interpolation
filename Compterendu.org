@@ -28,12 +28,85 @@
 
 #+TOC: headlines 2 % afficher tdm ici, nombre de "sous titre", 3= va jusqu'à titre 3
 
-** Rappel rapide des méthodes
+* Rappel rapide des méthodes
 
-** Présentation des programmes commentés
 
-** Présentation des matrices test au dos de la feuille
+** Cas général des méthodes
 
-** Commentaires des jeux d'essais à partir de données relatives
+Pour les deux méthodes, le but est le même trouver une équation avec un nombre de points $k+1$ de la forme :
 
-** Conclusion sur les méthodes
+
+\[ P(x)= a_0 + a_1x + a_2x^2 + … + a_nx^n  \]
+
+Où l'on $n \in [0, 1, ...k]$.
+
+
+
+** Méthode de Lagrange
+
+
+https://fr.wikipedia.org/wiki/Interpolation_newtonienne#Remarque
+
+La méthode de Lagrange se base sur la formule suivante :
+
+\[ L(x)=\sum _{i=0}^{n}y_{i}\left(\prod _{i=0,i\neq j}^{n}{\frac {x-x_{j}}{x_{i}-x_{j}}}\right) \]
+
+Que l'on peut aussi écrire sous cette forme :
+
+\[ L(X)=\sum _{i=0}^{n}y_{i}l_{i}(X)} \]
+
+Avec $li$ définie tel que :
+
+\[li = \prod _{i=0,i\neq j}^{n}{\frac {x-x_{j}}{x_{i}-x_{j}}}\right \]
+
+
+
+** Méthode de Newton
+
+
+
+
+\[   N(x)=\sum _{i=0}^{k}a_{i}n_{i}(x)}\]
+
+Avec les polynômes de Newton définis de la manière
+suivante
+
+\[ n_{i}(x)=\prod _{0\leq i&lt;i}(x-x_{j})\qquad j=0,\ldots ,k  \]
+
+
+Conclusion :
+
+\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{k}](x-x_{0})\ldots (x-x_{k-1}).}  \]
+
+* Présentation des programmes commentés
+
+* Présentation des Jeux d'essais (avec graphique)
+
+* Commentaires des jeux d'essais
+
+
+1. unicité du polynôme obtenu
+2. adéquation du polynôme aux jeux d'essais
+3. influence de la modification d'un ou plusieurs points donnés sur le poly
+4. évaluation des coûts (complexité, efficacité)
+
+* Conclusion sur les méthodes
+
+
+https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees
+
+Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat. En effet, 
+
+
+Il existe une fonction sur scilab mdrr
+Scilab : calcul de polynome d’interpolation de Newton
+
+La fonction Scilab newton.sci permet de déterminer le polynome d’interpolation de Newton. X
+contient les points d’interpolations et Y les valeurs d’interpolation, P
+
+
+est le polynome d’interpolation de Newton calculé à l’aide des différences divisées.
+
+
+
+

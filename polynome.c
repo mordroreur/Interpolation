@@ -16,7 +16,6 @@ polynome *creePolynome(int maxDeg)
   poly->p = (float *)malloc(sizeof(float) * (maxDeg + 1));
   for (i = 0; i < maxDeg; ++i)
   {
-    printf("Test\n");
     poly->p[i] = 0;
   }
   return poly;
@@ -50,7 +49,7 @@ void destroyPolynome(polynome *p)
 void affichepolynome(polynome *p)
 {
   int i;
-  for (i = 0; i < p->maxDeg; ++i)
+  for (i = 0; i < p->maxDeg + 1; ++i)
   {
     if (i != 0)
     {

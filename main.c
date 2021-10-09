@@ -37,9 +37,6 @@ int main()
   /* Test des différentes fonctions : */
   float flo = 3.0;
   polynome *machin = transformefloatenpoly(flo);
-  printf("le truc polynome transformé est \n");
-
-  affichepolynome(machin);
 
   /* int a = 10; */
   /* printf("le truc polynome transformé est %f  d'indice %d \n", machin->p[a],
@@ -78,7 +75,8 @@ int main()
   /* printf("point : %f, %f\n", points[0][i], points[1][i]); */
   /* } */
 
-  /* polynome *fonction = calculLagrange(l); */
+  polynome *fonction = calculLagrange(l);
+
   /* affichepolynome(fonction); */
 
   //  for(int i = 0; i < 4; i++){
