@@ -26,6 +26,39 @@
  */
 int main()
 {
+  //  srand(time(NULL)); // in case we need random
+
+
+  polynome *Solution;
+  Liste listePoints = creerListe();
+  
+  char choix = 'A';
+  
+  printf("Bonjours et bienvenue dans ce programme d'interpolation.\n");
+  printf("Pour voire l'aide utiliser la lettre h.\n");
+  while (choix != 'q')
+  {
+    printf("Que voulez vous faire ? ");
+    scanf("%c", &choix);
+    getchar();
+    switch (choix)
+    {
+    case 'h':
+      printf("    h : Afficher cette aide.\n    g : Ouvre une fenêtre graphique (TODO : all).\n    n : Applique l'interpolation de Newton.\n    l : applique l'interpolation de lagrange.\n    r : Permet de remplir des points.\n    a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
+      break;
+    case 'g':printf("J'ai poutant marqué que c pas fait!!!!\n");break;
+    case 'r':casRemplir(&listePoints);break;
+    default:
+      printf("Toutes les lettres a rentrés sont "
+             "en minuscule. Utiliser h pour savoir quels sont vos choix.\n\n");
+      getchar();
+      break;
+    }
+  }
+
+
+
+  
 
   /* polynome *p1 = creePolynomedemande(); */
   /* polynome *p2 = creePolynome(0); */
@@ -91,4 +124,15 @@ int main()
   //  int x; /**< Description de x. */
 
   return 0;
+}
+
+void casRemplir(Liste *l){
+  char choix = 'A';
+
+    printf("Que voulez vous faire ? ");
+    scanf("%c", &choix);
+    getchar();
+
+
+  
 }

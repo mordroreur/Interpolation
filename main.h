@@ -13,4 +13,7 @@
 #include "lagrange.h"
 #include "newton.h"
 
+
+void casRemplir(Liste *l);
+
 #endif /* MAIN_HEADER_ */
