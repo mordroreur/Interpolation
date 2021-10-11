@@ -271,22 +271,22 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
 
 
 
-  TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
-  printf("%p\n", Sans);
+  TTF_Font* Sans = TTF_OpenFont("Res/Quicksilver.ttf", 24);
+
   
 // this is the color in rgb format,
 // maxing out all would give you the color white,
 // and it will be your text's color
-SDL_Color White = {255, 255, 255};
+SDL_Color Dark = {0, 0, 0};
 
 // as TTF_RenderText_Solid could only be used on
 // SDL_Surface then you have to create the surface first
 SDL_Surface* surfaceMessage =
-      TTF_RenderText_Solid(Sans, "", White); 
+      TTF_RenderText_Solid(Sans, "Testpons ?", Dark); 
 
 // now you can convert it into a texture
-//SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-/*
+SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
 SDL_Rect Message_rect; //create a rect
 Message_rect.x = 0;  //controls the rect's x coordinate 
 Message_rect.y = 0; // controls the rect's y coordinte
@@ -308,7 +308,7 @@ SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
 // Don't forget to free your surface and texture
 SDL_FreeSurface(surfaceMessage);
-SDL_DestroyTexture(Message);*/
+SDL_DestroyTexture(Message);
 
   
   /*

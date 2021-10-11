@@ -6,6 +6,7 @@
  * \date 8 Octobre 2021
  */
 #include "newton.h"
+#include "polynome.h"
 
 
 
@@ -48,6 +49,6 @@ polynome *ResolutionParNewton(Liste lstpoints){
     Solution = multPolynome(Solution, tmp);
     Solution->p[0] += triangle[pointNB-i-2][0];
   }
-      
+  Solution = AdaptePoly(Solution);
   return Solution;
 }

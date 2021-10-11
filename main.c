@@ -16,6 +16,7 @@
   \n Donc je peu pas vous dire...
  */
 #include "main.h"
+#include "polynome.h"
 
 /**
  * \fn int main ()
@@ -106,7 +107,7 @@ int main()
   float **points;
 
 
-  /* points = ListeToTabsPoints(l); */
+   points = ListeToTabsPoints(l); */
 
 
   /* for (int i = 0; i < 4; i++) */

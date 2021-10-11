@@ -126,3 +126,16 @@ polynome *multPolynome(polynome *p1, polynome *p2)
   destroyPolynome(p2);
   return poly;
 }
+
+polynome *AdaptePoly(polynome *p){
+  int x = p->maxDeg;
+  while((p->p[x] == 0) && (x > 0)){
+    x--;
+  }
+  polynome *Sol = creePolynome(x);
+  for(int i = 0; i < x+1; i++){
+    Sol->p[i] = p->p[i];
+  }
+  destroyPolynome(p);
+  return Sol;
+}
