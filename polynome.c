@@ -84,24 +84,6 @@ polynome *addPolynome(polynome *p1, polynome *p2)
   return poly;
 }
 
-polynome *susPolynome(polynome *p1, polynome *p2)
-{
-  int i;
-  polynome *poly =
-      creePolynome((p1->maxDeg > p2->maxDeg) ? p1->maxDeg : p2->maxDeg);
-  for (i = 0; i < p1->maxDeg; ++i)
-  {
-    poly->p[i] = p1->p[i];
-  }
-  for (i = 0; i < p2->maxDeg; ++i)
-  {
-    poly->p[i] -= p2->p[i];
-  }
-  destroyPolynome(p1);
-  destroyPolynome(p2);
-  return poly;
-}
-
 polynome *transformefloatenpoly(float unfloat)
 {
   polynome *poly = creePolynome(0);
@@ -129,8 +111,7 @@ polynome *multPolynome(polynome *p1, polynome *p2)
 
 polynome *AdaptePoly(polynome *p){
   int x = p->maxDeg;
-  float precision = 0.001;
-  while(((p->p[x] - precision) < 0) && ((p->p[x] + precision) > 0) && (x > 0)){
+  while((p->p[x] == 0) && (x > 0)){
     x--;
   }
   polynome *Sol = creePolynome(x);

@@ -5,31 +5,35 @@
  * \version pré-alpha
  * \date 8 Octobre 2021
  */
+
 #include "lagrange.h"
 
-void affichetab(float **tab, int taille)
-{
-  int i, j;
-  for (i = 0; i < 2; ++i)
-  {
-    for (j = 0; j < taille; ++j)
-    {
-      printf("%f  ", tab[i][j]);
-    }
-    printf("\n");
-  };
-}
+/**
+ * \fn Liste calculLi(int numero,Liste points)
+ * \brief Function that find Li to resolve an interpolation with the Lagrange
+ * method.
+ *
+ *
+ * \param numero - which is the number i of Li
+ * \param points - points is a list of points
+ * \param nbMaillon - nbMaillon is the number of the maillon we want to destroy
+ * \return *polynome - Because we want Li
+ */
 
 polynome *calculLi(int numero, Liste points)
 {
-  /* point;  transfore liste en tab*/
 
+  /* Initialisation d'un tableau à partir d'une liste (accéder au
+     valeur plus facilement) */
   float **pointstab = ListeToTabsPoints(points);
   int i;
-  /* float resultat; */
+
+  /* initiation du polynôme Li avec 1, car multiplication (si 0 alors
+     résultat = 0) */
   polynome *Li = creePolynome(1);
   Li->p[0] = 1;
 
+  /* initialisation de la variable temporaire pour la boucle */
   polynome *tp = creePolynome(0);
   tp->p[0] = 1;
 
@@ -37,43 +41,50 @@ polynome *calculLi(int numero, Liste points)
   {
     if (i == numero)
     {
-      printf("Test boucle\n");
+      /* si i = numero, alors il y aurait une division par 0. On ne
+         fait donc rien */
     }
     else
     {
+      /* Création du polynôme pour les calculs */
       polynome *x = creePolynome(1);
-
       x->p[1] = 1;
 
-      /* affichepolynome(transformefloatenpoly((pointstab[0][numero]))); */
+      /* Calcul de la première différence */
       polynome *y = addPolynome(x, transformefloatenpoly(-pointstab[0][i]));
-      printf("degrès max de mon poly y est :%d\n", y->maxDeg);
-      /* affichepolynome(y); */
+
+      /* calcul de la multiplication par l'inverse de xnum - xi */
       polynome *tmp = multPolynome(
           y,
           transformefloatenpoly(1 / (pointstab[0][numero] - pointstab[0][i])));
+
+      /* multiplication par le polynôme précédemment calculé */
       Li = multPolynome(Li, tmp);
     }
   }
-  affichepolynome(Li);
-
   return Li;
 }
 
 polynome *calculLagrange(Liste points)
 {
   int i;
+
+  /* création du polynôme du résultatde l'interpolation  */
   polynome *fonction = creePolynome(ListLenght(points));
+
+  /* Initialisation d'un tableau à partir d'une liste (accéder au
+     valeur plus facilement) */
   float **pointstab;
   pointstab = ListeToTabsPoints(points);
 
+  /* boucle for pour multiplier par yi les Li calculer dans la
+     fonction calculLi */
   for (i = 0; i < ListLenght(points); ++i)
   {
     fonction = addPolynome(fonction,
                            multPolynome(transformefloatenpoly(pointstab[1][i]),
                                         calculLi(i, points)));
   }
-  /* printf("taille fonction = %d\n", fonction->maxDeg); */
 
   return fonction;
 }

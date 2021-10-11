@@ -33,12 +33,12 @@
 
 ** Cas général des méthodes
 
-Pour les deux méthodes, le but est le même trouver une équation avec un nombre de points $k+1$ de la forme :
+Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points $k+1$ de la forme :
 
 
 \[ P(x)= a_0 + a_1x + a_2x^2 + … + a_nx^n  \]
 
-Où l'on $n \in [0, 1, ...k]$.
+Où l'on a $n \in [0, 1, ...k]$.
 
 
 
@@ -80,10 +80,100 @@ Conclusion :
 
 * Présentation des programmes commentés
 
+Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables [[file:lagrange.c][ici pour la méthode de Lagrange]], ainsi qu'[[file:newton.c][ici pour la méthode Newton]].
+
+** Nos structures
+
+*** Listes
+
+Le code pour les liste est trouvable [[file:listePoint.c][ici]].
+
+
+
+*** Polynômes
+
+Le code pour les polynôme est trouvable [[file:polynome.c][ici]]. 
+
+Comme vous le savez, le C n'inclue pas de type "polynôme". Nous avons donc dû creer la structure suivante :
+
+#+begin_src C
+  
+  typedef struct Polynome{
+    float *p;
+    int maxDeg;
+  }polynome;
+  
+#+end_src
+
+Cette structure à pour but de prendre un tableau, où l'indice du tableau nous permet de trouver le degrès de x, et les valeurs stockés dans le tableau sont les coefficients du polynômes.
+
+Nous avons également fait les diverses fonctions de bases :
+1. /polynome *creePolynome(int maxDeg)/, qui nous permet de créer un pointeur sur un polynôme.
+2. void destroyPolynome(polynome *p), qui supprime un polynôme.
+3. void affichepolynome(polynome *p), comme son nom l'indique, affiche le polynôme passé en paramètre.
+4. polynome *transformefloatenpoly(float unfloat), qui convertie un flottant en un polynôme.
+5. polynome *addPolynome(polynome *p1, polynome *p2) et
+polynome *multPolynome(polynome *p1, polynome *p2), qui nous permet d'additionner, soustraire et de multiplier deux polynômes entre eux.
+
+
+** Présentation de la méthode de Lagrange
+
+Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux étapes : 
+1. D'abord, calculer Li, avec une fonction /calculLi/
+2. Puis, grâce à la fonction /calculLi/ que l'on appelle dans la fonction /calculLagrange/, on renvoie le polynôme correspondant à l'interpolation.
+
+
+
+
+*** Présentation de la fonction /calculLi/
+
+Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  $i\in [0, 1, ... , k]$.
+Les deux principales difficultés sont les suivantes :
+1. Prendre en compte le cas de la division par 0, lorsque $x_i - x_j = 0$.
+2. Réinitialiser x à chaque tour de boucle. En effet, nos fonction renvoie un nouveau pointeur
+
+#+begin_src C
+  
+  for (i = 0; i < ListLenght(points); ++i)
+  {
+    if (i == numero)
+    {
+      /* si i = numero, alors il y aurait une division par 0. On ne
+	 fait donc rien */
+    }
+    else
+    {
+      /* Création du polynôme pour les calculs */
+      polynome *x = creePolynome(1);
+      x->p[1] = 1;
+  
+      /* Calcul de la première différence */
+      polynome *y = addPolynome(x, transformefloatenpoly(-pointstab[0][i]));
+  
+      /* calcul de la multiplication par l'inverse de xnum - xi */
+      polynome *tmp = multPolynome(
+	  y,
+	  transformefloatenpoly(1 / (pointstab[0][numero] - pointstab[0][i])));
+  
+      /* multiplication par le polynôme précédemment calculé */
+      Li = multPolynome(Li, tmp);
+    }
+  }
+  
+  return Li;
+  
+#+end_src
+
+*** Présentation de la fonction /calculLagrange/
+
+
+
+** Présentation de la méthode de Newton
+
+
 * Présentation des Jeux d'essais (avec graphique)
 
 * Commentaires des jeux d'essais
-
 
 1. unicité du polynôme obtenu
 2. adéquation du polynôme aux jeux d'essais
