@@ -45,7 +45,7 @@ Où l'on a $n \in [0, 1, ...k]$.
 ** Méthode de Lagrange
 
 
-https://fr.wikipedia.org/wiki/Interpolation_newtonienne#Remarque
+
 
 La méthode de Lagrange se base sur la formule suivante :
 
@@ -63,7 +63,7 @@ Avec $li$ définie tel que :
 
 ** Méthode de Newton
 
-
+https://fr.wikipedia.org/wiki/Interpolation_newtonienne#Remarque
 
 
 \[   N(x)=\sum _{i=0}^{k}a_{i}n_{i}(x)}\]
@@ -84,10 +84,60 @@ Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais
 
 ** Nos structures
 
-*** Listes
+Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
+1. La première, la structure /point/, qui est utilisé partout. En effet, cette structure nous permet de stocker les différents points qui nous sont nécessaire pour trouver un polynôme respectant l'interpolation.
+2. Puis, la structure /Maillon/. Cette structure est essentielle pour une chose : former des listes, ce qui nous permet d'ajouter un nombre de points indéfinis au départ, puis d'en rajouter, supprimer, etc, sans perdre de la mémoire.
+3. La structure /Liste/, qui est la suite logique de structure /Maillon/.
+4. La structure polynôme : celle-ci est particulière, une partie lui est entièrement consacré dans la suite du document.
+5. Enfin, même si ce n'est pas vraiment une structure, une fonction s'appelant /transformefloatenpoly/ transforme une liste de points en un tableau, permettant alors d'y accéder plus rapidement et facilement.
 
-Le code pour les liste est trouvable [[file:listePoint.c][ici]].
+*** Listes/Points
 
+Le code pour les listes ainsi que pour les points est trouvable [[file:listePoint.c][ici]].
+
+Pour former un point, nous avons tout simplement besoin d'un x et d'un y associé à celui-ci.
+La structure des points est donc la suivante :
+
+#+begin_src C
+    
+  typedef struct point
+  {
+    float x;
+    float y;
+  } point;
+    
+#+end_src
+
+Puis, nous voulons rassembler ses points en des TODO, nous avons donc besoin de deux structures supplémentaires : la structure /Maillon/ et la struture /Liste/. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
+
+#+begin_src C
+    
+  typedef struct Maillon{
+    struct Maillon *suiv;
+    point val;
+  }Maillon;
+    
+  typedef struct Liste{
+    struct Maillon *first;
+  }Liste;
+    
+    
+#+end_src
+
+De plus, les fonctions usuelles des listes sont également créé :
+1. /creerListe/
+2. /detruireListe/
+3. ajouteDebut
+4. ajouteFin
+5. /afficheListePoints/
+6. ListLenght
+7. supprDebut
+8. supprFin
+9. supprValeur
+10. supprMaillon
+11. ListeToTabsPoints, qui transforme une liste en un tableau.
+12. ViderListe
+   
 
 
 *** Polynômes
@@ -105,15 +155,60 @@ Comme vous le savez, le C n'inclue pas de type "polynôme". Nous avons donc dû 
   
 #+end_src
 
-Cette structure à pour but de prendre un tableau, où l'indice du tableau nous permet de trouver le degrès de x, et les valeurs stockés dans le tableau sont les coefficients du polynômes.
+Cette structure à pour but de prendre un tableau, où l'indice du tableau nous permet de trouver le degrès de x, et les valeurs stockés dans le tableau sont les différents coefficients pour chaque x du polynôme.
 
 Nous avons également fait les diverses fonctions de bases :
 1. /polynome *creePolynome(int maxDeg)/, qui nous permet de créer un pointeur sur un polynôme.
 2. void destroyPolynome(polynome *p), qui supprime un polynôme.
 3. void affichepolynome(polynome *p), comme son nom l'indique, affiche le polynôme passé en paramètre.
 4. polynome *transformefloatenpoly(float unfloat), qui convertie un flottant en un polynôme.
-5. polynome *addPolynome(polynome *p1, polynome *p2) et
-polynome *multPolynome(polynome *p1, polynome *p2), qui nous permet d'additionner, soustraire et de multiplier deux polynômes entre eux.
+5. polynome *addPolynome(polynome *p1, polynome *p2), qui nous permet d'additionner (et dans le même temps de soustraire) deux polynôme entre eux
+
+   #+begin_src C
+     
+     int i;
+     polynome *poly =
+       creePolynome((p1->maxDeg > p2->maxDeg) ? p1->maxDeg : p2->maxDeg);
+     
+     for (i = 0; i < p1->maxDeg + 1; ++i)
+       {
+	 /* printf("Degrèse de p1 %d \n", p1->maxDeg); */
+	 poly->p[i] = p1->p[i];
+       }
+     
+     for (i = 0; i < p2->maxDeg + 1; ++i)
+       {
+	 poly->p[i] += p2->p[i];
+       }
+     destroyPolynome(p1);
+     destroyPolynome(p2);
+     return poly;
+     
+   #+end_src
+6. polynome *multPolynome(polynome *p1, polynome *p2). Cette fonction multiplie deux polynômes entre eux.
+
+   #+begin_src C
+     
+     
+     int i, j;
+     polynome *poly = creePolynome(p1->maxDeg + p2->maxDeg);
+     
+     for (i = 0; i < p1->maxDeg + 1; ++i)
+       {
+	 for (j = 0; j < p2->maxDeg + 1; ++j)
+	   {
+	     poly->p[i + j] += p1->p[i] * p2->p[j];
+	   }
+       }
+     destroyPolynome(p1);
+     destroyPolynome(p2);
+     return poly;
+     
+   #+end_src
+
+
+
+
 
 
 ** Présentation de la méthode de Lagrange
@@ -130,7 +225,7 @@ Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux é
 Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  $i\in [0, 1, ... , k]$.
 Les deux principales difficultés sont les suivantes :
 1. Prendre en compte le cas de la division par 0, lorsque $x_i - x_j = 0$.
-2. Réinitialiser x à chaque tour de boucle. En effet, nos fonction renvoie un nouveau pointeur
+2. Réinitialiser x à chaque tour de boucle. En effet, nos fonction renvoie un nouveau pointeur, ce qui supprime x à chaque fois. Nous devons donc le réinitialiser à chaque tour dans la boucle, ce qui nous permet d'enlever la fameuse erreur "segmentation fault" !
 
 #+begin_src C
   
@@ -166,9 +261,39 @@ Les deux principales difficultés sont les suivantes :
 
 *** Présentation de la fonction /calculLagrange/
 
+Cette fonction permet de faire la somme des différents Li trouvé dans la fonction [[*Présentation de la fonction /calculLi/][/calculLi/]].
+En effet, pour compléter la méthode de Lagrange, il faut faire une boucle /for/ qui fait une somme des $y_i$ multiplier par [[*Présentation de la fonction /calculLi/][/calculLi/]] pour l'itération $i$.
 
+#+begin_src C
+  
+    int i;
+
+  /* création du polynôme du résultatde l'interpolation  */
+  polynome *fonction = creePolynome(ListLenght(points));
+
+  /* Initialisation d'un tableau à partir d'une liste (accéder au
+     valeur plus facilement) */
+  float **pointstab;
+  pointstab = ListeToTabsPoints(points);
+
+  /* boucle for pour multiplier par yi les Li calculer dans la
+     fonction calculLi */
+  for (i = 0; i < ListLenght(points); ++i)
+  {
+    fonction = addPolynome(fonction,
+                           multPolynome(transformefloatenpoly(pointstab[1][i]),
+                                        calculLi(i, points)));
+  }
+
+  return fonction;
+  
+#+end_src
+
+Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou bien même l'utiliser dans SDL.
 
 ** Présentation de la méthode de Newton
+
+
 
 
 * Présentation des Jeux d'essais (avec graphique)

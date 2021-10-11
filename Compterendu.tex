@@ -1,4 +1,4 @@
-% Created 2021-10-08 ven. 21:54
+% Created 2021-10-11 lun. 22:06
 % Intended LaTeX compiler: pdflatex
 \documentclass[letter]{article}
                       \usepackage[utf8]{inputenc}
@@ -36,17 +36,319 @@
 \tableofcontents
 
 \section{Rappel rapide des méthodes}
-\label{sec:org7794d8c}
+\label{sec:org54bdf1b}
+
+
+\subsection{Cas général des méthodes}
+\label{sec:orga3d242c}
+
+Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points \(k+1\) de la forme :
+
+
+\[ P(x)= a_0 + a_1x + a_2x^2 + … + a_nx^n  \]
+
+Où l'on a \(n \in [0, 1, ...k]\).
+
+
+
+\subsection{Méthode de Lagrange}
+\label{sec:org831ea66}
+
+
+
+
+La méthode de Lagrange se base sur la formule suivante :
+
+\[ L(x)=\sum _{i=0}^{n}y_{i}\left(\prod _{i=0,i\neq j}^{n}{\frac {x-x_{j}}{x_{i}-x_{j}}}\right) \]
+
+Que l'on peut aussi écrire sous cette forme :
+
+\[ L(X)=\sum _{i=0}^{n}y_{i}l_{i}(X)} \]
+
+Avec \(li\) définie tel que :
+
+\[li = \prod _{i=0,i\neq j}^{n}{\frac {x-x_{j}}{x_{i}-x_{j}}}\right \]
+
+
+
+\subsection{Méthode de Newton}
+\label{sec:orga1c9306}
+
+\url{https://fr.wikipedia.org/wiki/Interpolation\_newtonienne\#Remarque}
+
+
+\[   N(x)=\sum _{i=0}^{k}a_{i}n_{i}(x)}\]
+
+Avec les polynômes de Newton définis de la manière
+suivante
+
+\[ n_{i}(x)=\prod _{0\leq i&lt;i}(x-x_{j})\qquad j=0,\ldots ,k  \]
+
+
+Conclusion :
+
+\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{k}](x-x_{0})\ldots (x-x_{k-1}).}  \]
 
 \section{Présentation des programmes commentés}
-\label{sec:orgebb5fbf}
+\label{sec:org2bcc7a2}
 
-\section{Présentation des matrices test au dos de la feuille}
-\label{sec:orgec12617}
+Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables \href{lagrange.c}{ici pour la méthode de Lagrange}, ainsi qu'\href{newton.c}{ici pour la méthode Newton}.
 
-\section{Commentaires des jeux d'essais à partir de données relatives}
-\label{sec:orgf28260e}
+\subsection{Nos structures}
+\label{sec:org905a395}
+
+Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
+\begin{enumerate}
+\item La première, la structure \emph{point}, qui est utilisé partout. En effet, cette structure nous permet de stocker les différents points qui nous sont nécessaire pour trouver un polynôme respectant l'interpolation.
+\item Puis, la structure \emph{Maillon}. Cette structure est essentielle pour une chose : former des listes, ce qui nous permet d'ajouter un nombre de points indéfinis au départ, puis d'en rajouter, supprimer, etc, sans perdre de la mémoire.
+\item La structure \emph{Liste}, qui est la suite logique de structure \emph{Maillon}.
+\item La structure polynôme : celle-ci est particulière, une partie lui est entièrement consacré dans la suite du document.
+\item Enfin, même si ce n'est pas vraiment une structure, une fonction s'appelant \emph{transformefloatenpoly} transforme une liste de points en un tableau, permettant alors d'y accéder plus rapidement et facilement.
+\end{enumerate}
+
+\subsubsection{Listes/Points}
+\label{sec:orgbf31917}
+
+Le code pour les listes ainsi que pour les points est trouvable \href{listePoint.c}{ici}.
+
+Pour former un point, nous avons tout simplement besoin d'un x et d'un y associé à celui-ci.
+La structure des points est donc la suivante :
+
+\begin{verbatim}
+
+typedef struct point
+{
+  float x;
+  float y;
+} point;
+
+\end{verbatim}
+
+Puis, nous voulons rassembler ses points en des TODO, nous avons donc besoin de deux structures supplémentaires : la structure \emph{Maillon} et la struture \emph{Liste}. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
+
+\begin{verbatim}
+
+typedef struct Maillon{
+  struct Maillon *suiv;
+  point val;
+}Maillon;
+
+typedef struct Liste{
+  struct Maillon *first;
+}Liste;
+
+
+\end{verbatim}
+
+De plus, les fonctions usuelles des listes sont également créé :
+\begin{enumerate}
+\item \emph{creerListe}
+\item \emph{detruireListe}
+\item ajouteDebut
+\item ajouteFin
+\item \emph{afficheListePoints}
+\item ListLenght
+\item supprDebut
+\item supprFin
+\item supprValeur
+\item supprMaillon
+\item ListeToTabsPoints, qui transforme une liste en un tableau.
+\item ViderListe
+\end{enumerate}
+
+
+
+\subsubsection{Polynômes}
+\label{sec:org9434df4}
+
+Le code pour les polynôme est trouvable \href{polynome.c}{ici}. 
+
+Comme vous le savez, le C n'inclue pas de type "polynôme". Nous avons donc dû creer la structure suivante :
+
+\begin{verbatim}
+
+typedef struct Polynome{
+  float *p;
+  int maxDeg;
+}polynome;
+
+\end{verbatim}
+
+Cette structure à pour but de prendre un tableau, où l'indice du tableau nous permet de trouver le degrès de x, et les valeurs stockés dans le tableau sont les différents coefficients pour chaque x du polynôme.
+
+Nous avons également fait les diverses fonctions de bases :
+\begin{enumerate}
+\item \emph{polynome *creePolynome(int maxDeg)}, qui nous permet de créer un pointeur sur un polynôme.
+\item void destroyPolynome(polynome *p), qui supprime un polynôme.
+\item void affichepolynome(polynome *p), comme son nom l'indique, affiche le polynôme passé en paramètre.
+\item polynome *transformefloatenpoly(float unfloat), qui convertie un flottant en un polynôme.
+\item polynome *addPolynome(polynome *p1, polynome *p2), qui nous permet d'additionner (et dans le même temps de soustraire) deux polynôme entre eux
+
+\begin{verbatim}
+
+int i;
+polynome *poly =
+  creePolynome((p1->maxDeg > p2->maxDeg) ? p1->maxDeg : p2->maxDeg);
+
+for (i = 0; i < p1->maxDeg + 1; ++i)
+  {
+    /* printf("Degrèse de p1 %d \n", p1->maxDeg); */
+    poly->p[i] = p1->p[i];
+  }
+
+for (i = 0; i < p2->maxDeg + 1; ++i)
+  {
+    poly->p[i] += p2->p[i];
+  }
+destroyPolynome(p1);
+destroyPolynome(p2);
+return poly;
+
+\end{verbatim}
+\item polynome *multPolynome(polynome *p1, polynome *p2). Cette fonction multiplie deux polynômes entre eux.
+
+\begin{verbatim}
+
+
+int i, j;
+polynome *poly = creePolynome(p1->maxDeg + p2->maxDeg);
+
+for (i = 0; i < p1->maxDeg + 1; ++i)
+  {
+    for (j = 0; j < p2->maxDeg + 1; ++j)
+      {
+	poly->p[i + j] += p1->p[i] * p2->p[j];
+      }
+  }
+destroyPolynome(p1);
+destroyPolynome(p2);
+return poly;
+
+\end{verbatim}
+\end{enumerate}
+
+
+
+
+
+
+\subsection{Présentation de la méthode de Lagrange}
+\label{sec:orgd76e59b}
+
+Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux étapes : 
+\begin{enumerate}
+\item D'abord, calculer Li, avec une fonction \emph{calculLi}
+\item Puis, grâce à la fonction \emph{calculLi} que l'on appelle dans la fonction \emph{calculLagrange}, on renvoie le polynôme correspondant à l'interpolation.
+\end{enumerate}
+
+
+
+
+\subsubsection{Présentation de la fonction \emph{calculLi}}
+\label{sec:orgc3c91b2}
+
+Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  \(i\in [0, 1, ... , k]\).
+Les deux principales difficultés sont les suivantes :
+\begin{enumerate}
+\item Prendre en compte le cas de la division par 0, lorsque \(x_i - x_j = 0\).
+\item Réinitialiser x à chaque tour de boucle. En effet, nos fonction renvoie un nouveau pointeur, ce qui supprime x à chaque fois. Nous devons donc le réinitialiser à chaque tour dans la boucle, ce qui nous permet d'enlever la fameuse erreur "segmentation fault" !
+\end{enumerate}
+
+\begin{verbatim}
+
+for (i = 0; i < ListLenght(points); ++i)
+{
+  if (i == numero)
+  {
+    /* si i = numero, alors il y aurait une division par 0. On ne
+       fait donc rien */
+  }
+  else
+  {
+    /* Création du polynôme pour les calculs */
+    polynome *x = creePolynome(1);
+    x->p[1] = 1;
+
+    /* Calcul de la première différence */
+    polynome *y = addPolynome(x, transformefloatenpoly(-pointstab[0][i]));
+
+    /* calcul de la multiplication par l'inverse de xnum - xi */
+    polynome *tmp = multPolynome(
+	y,
+	transformefloatenpoly(1 / (pointstab[0][numero] - pointstab[0][i])));
+
+    /* multiplication par le polynôme précédemment calculé */
+    Li = multPolynome(Li, tmp);
+  }
+}
+
+return Li;
+
+\end{verbatim}
+
+\subsubsection{Présentation de la fonction \emph{calculLagrange}}
+\label{sec:org6882511}
+
+Cette fonction permet de faire la somme des différents Li trouvé dans la fonction \hyperref[sec:orgc3c91b2]{\emph{calculLi}}.
+En effet, pour compléter la méthode de Lagrange, il faut faire une boucle \emph{for} qui fait une somme des \(y_i\) multiplier par \hyperref[sec:orgc3c91b2]{\emph{calculLi}}.
+
+\begin{verbatim}
+
+  int i;
+
+/* création du polynôme du résultatde l'interpolation  */
+polynome *fonction = creePolynome(ListLenght(points));
+
+/* Initialisation d'un tableau à partir d'une liste (accéder au
+   valeur plus facilement) */
+float **pointstab;
+pointstab = ListeToTabsPoints(points);
+
+/* boucle for pour multiplier par yi les Li calculer dans la
+   fonction calculLi */
+for (i = 0; i < ListLenght(points); ++i)
+{
+  fonction = addPolynome(fonction,
+			 multPolynome(transformefloatenpoly(pointstab[1][i]),
+				      calculLi(i, points)));
+}
+
+return fonction;
+
+\end{verbatim}
+
+\subsection{Présentation de la méthode de Newton}
+\label{sec:orga351f60}
+
+
+\section{Présentation des Jeux d'essais (avec graphique)}
+\label{sec:org9724f6c}
+
+\section{Commentaires des jeux d'essais}
+\label{sec:org56431b8}
+
+\begin{enumerate}
+\item unicité du polynôme obtenu
+\item adéquation du polynôme aux jeux d'essais
+\item influence de la modification d'un ou plusieurs points donnés sur le poly
+\item évaluation des coûts (complexité, efficacité)
+\end{enumerate}
 
 \section{Conclusion sur les méthodes}
-\label{sec:org13855c9}
+\label{sec:orgdf8850a}
+
+
+\url{https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees}
+
+Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat. En effet, 
+
+
+Il existe une fonction sur scilab mdrr
+Scilab : calcul de polynome d’interpolation de Newton
+
+La fonction Scilab newton.sci permet de déterminer le polynome d’interpolation de Newton. X
+contient les points d’interpolations et Y les valeurs d’interpolation, P
+
+
+est le polynome d’interpolation de Newton calculé à l’aide des différences divisées.
 \end{document}
