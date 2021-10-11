@@ -15,5 +15,6 @@
 #include "render.h"
 
 void casRemplir(Liste *l);
+void casAutoFill(Liste *l);
 
 #endif /* MAIN_HEADER_ */

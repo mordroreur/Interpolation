@@ -111,6 +111,8 @@ polynome *multPolynome(polynome *p1, polynome *p2)
 
 polynome *AdaptePoly(polynome *p){
   int x = p->maxDeg;
+  //float precision = 0.01;
+  //while(((p->p[x] - precision) < 0) && ((p->p[x] + precision) > 0) && (x > 0)){
   while((p->p[x] == 0) && (x > 0)){
     x--;
   }
