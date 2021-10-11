@@ -1,6 +1,6 @@
 CC=gcc
-LDFLAG=
-CFLAG=-Wall
+LDFLAG=$(shell sdl2-config --cflags --libs) -lm -lSDL2_ttf
+CFLAG=-Wall $(shell sdl2-config --cflags --libs)
 EXEC=res
 SRC=$(wildcard *.c)
 OBJ=$(SRC:.c=.o)

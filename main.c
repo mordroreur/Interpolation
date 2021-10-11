@@ -46,8 +46,12 @@ int main()
     case 'h':
       printf("    h : Afficher cette aide.\n    g : Ouvre une fenêtre graphique (TODO : all).\n    n : Applique l'interpolation de Newton.\n    l : applique l'interpolation de lagrange.\n    r : Permet de remplir des points.\n    a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
       break;
-    case 'g':printf("J'ai poutant marqué que c pas fait!!!!\n");break;
+    case 'g':RenderingInterpolation(&listePoints);break;
+    case 'n':Solution = ResolutionParNewton(listePoints); affichepolynome(Solution);break;
+    case 'l':Solution = calculLagrange(listePoints); affichepolynome(Solution);break;
     case 'r':casRemplir(&listePoints);break;
+    case 'a':afficheListePoints(listePoints);break;
+    case 'q':printf("Au revoir!\n");break;
     default:
       printf("Toutes les lettres a rentrés sont "
              "en minuscule. Utiliser h pour savoir quels sont vos choix.\n\n");
@@ -68,8 +72,8 @@ int main()
   /* affichepolynome(poly); */
 
   /* Test des différentes fonctions : */
-  float flo = 3.0;
-  polynome *machin = transformefloatenpoly(flo);
+  //  float flo = 3.0;
+  //  polynome *machin = transformefloatenpoly(flo);
 
   /* int a = 10; */
   /* printf("le truc polynome transformé est %f  d'indice %d \n", machin->p[a],
@@ -81,7 +85,7 @@ int main()
   /*   i++; */
   /* } */
 
-  Liste l = creerListe();
+  /*Liste l = creerListe();
 
   point p;
   p.x = 0;
@@ -101,18 +105,20 @@ int main()
   ajouteDebut(&l, p);
   float **points;
 
+
   /* points = ListeToTabsPoints(l); */
+
 
   /* for (int i = 0; i < 4; i++) */
   /* { */
   /* printf("point : %f, %f\n", points[0][i], points[1][i]); */
   /* } */
 
-  polynome *fonction = calculLagrange(l);
+  //  polynome *fonction = calculLagrange(l);
 
-  affichepolynome(fonction);
-  fonction = ResolutionParNewton(l);
-  affichepolynome(fonction);
+  //  affichepolynome(fonction);
+  //  fonction = ResolutionParNewton(l);
+  //  affichepolynome(fonction);
 
   //  for(int i = 0; i < 4; i++){
   //    printf("point : %f, %f\n", points[0][i], points[1][i]);
@@ -128,11 +134,52 @@ int main()
 
 void casRemplir(Liste *l){
   char choix = 'A';
-
-    printf("Que voulez vous faire ? ");
+  char s[30];
+  int quit = 0;
+  int curseur = 0;
+  point p;
+  
+  if(ListLenght(*l) != 0){
+    afficheListePoints(*l);
+    printf("Voulez vous vider la liste(n = non) ? ");
     scanf("%c", &choix);
     getchar();
+    if(choix != 'n'){
+      ViderListe(l);
+    }
+  }
 
-
-  
+  while(!quit){
+    printf("Veuillez entrer le X(un caractère pour quitter) : ");
+    scanf("%s", s);getchar();
+    curseur = 0;
+    while(s[curseur] != '\0'){
+      if(s[curseur] == ',' || s[curseur] == '.'){
+	s[curseur] = '.';
+      }else if(!isdigit(s[curseur])){
+	quit = 1;
+	break;
+      }
+      curseur++;
+    }
+    if(!quit){
+      p.x = atof(s);
+      printf("Veuillez entrer le Y(un caractère pour quitter) : ");
+      scanf("%s", s);getchar();
+      curseur = 0;
+      while(s[curseur] != '\0'){
+	if(s[curseur] == ',' || s[curseur] == '.'){
+	  s[curseur] = '.';
+	}else if(!isdigit(s[curseur])){
+	  quit = 1;
+	  break;
+	}
+	curseur++;
+      }
+      if(!quit){
+	p.y = atof(s);
+	ajouteFin(l, p);
+      }
+    }
+  }  
 }

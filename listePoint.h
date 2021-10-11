@@ -84,7 +84,7 @@ void ajouteFin(Liste *l, point n);
  * \param l - l is the list we work on 
  * \return void
  */
-void afficheListe(Liste l);
+void afficheListePoints(Liste l);
 /**
  * \fn int ListLenght(Liste l)
  * \brief Function that get the size of a list.
@@ -129,5 +129,6 @@ void supprMaillon(Liste *l, int nbMaillon);
 
 
 float **ListeToTabsPoints(Liste l);
+void ViderListe(Liste *l);
 
 #endif /* LISTE_HEADER_ */

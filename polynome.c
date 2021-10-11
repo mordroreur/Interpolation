@@ -53,11 +53,11 @@ void affichepolynome(polynome *p)
   {
     if (i != 0)
     {
-      printf("%fx%d  ", p->p[i], i);
+      printf("+ %6.2f*x^(%d)  ", p->p[i], i);
     }
     else
-    {
-      printf("%f ", p->p[i]);
+    { 
+      printf("%6.2f ", p->p[i]);
     }
   }
   printf("\n");

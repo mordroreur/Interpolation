@@ -38,8 +38,9 @@ polynome *ResolutionParNewton(Liste lstpoints){
     }
   }
 
-  Solution->p[0] = triangle[pointNB-1][0];
-
+  if(pointNB != 0){
+    Solution->p[0] = triangle[pointNB-1][0];
+  }
   for(int i = 0; i < pointNB-1; i++){
     tmp = creePolynome(2);
     tmp->p[1] = 1;

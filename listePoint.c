@@ -89,17 +89,19 @@ void ajouteFin(Liste *l, point n){
  * \param l - l is the list we work on 
  * \return void
  */
-void afficheListe(Liste l){
+void afficheListePoints(Liste l){
   Maillon *new;
-  
+  int nb = 0;
   new = l.first;
   if(new == NULL){
     printf("La suite est vide.\n");
   }else{
-    printf("La suite vaut : (%f, %f)", new->val.x, new->val.y);
+    printf("        x       |       y\n");
+    printf("%d : %9.5f   |    %9.5f\n",nb,  new->val.x, new->val.y);
     new = new->suiv;
     while(new != NULL) {
-      printf(", (%f, %f)", new->val.x, new->val.y);
+      nb++;
+      printf("%d : %9.5f   |    %9.5f\n",nb,  new->val.x, new->val.y);
       new = new->suiv;
     }
     printf("\n");
@@ -244,5 +246,18 @@ float **ListeToTabsPoints(Liste l){
   return res;
 
   
+}
+
+void ViderListe(Liste *l){
+  Maillon *old;
+  Maillon *new;
+  
+  new = l->first;
+  while (new != NULL) {
+    old = new;
+    new = new->suiv;
+    free(old);
+  }
+  l->first = NULL;
 }
 
