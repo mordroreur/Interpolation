@@ -157,7 +157,8 @@ void casRemplir(Liste *l){
     while(s[curseur] != '\0'){
       if(s[curseur] == ',' || s[curseur] == '.'){
 	s[curseur] = '.';
-      }else if(!isdigit(s[curseur])){
+      }else if(!isdigit(s[curseur])  && s[curseur] != '-'){
+	printf("%c\n", s[curseur]);
 	quit = 1;
 	break;
       }
@@ -171,7 +172,7 @@ void casRemplir(Liste *l){
       while(s[curseur] != '\0'){
 	if(s[curseur] == ',' || s[curseur] == '.'){
 	  s[curseur] = '.';
-	}else if(!isdigit(s[curseur])){
+	}else if(!isdigit(s[curseur]) && s[curseur] != '-'){
 	  quit = 1;
 	  break;
 	}

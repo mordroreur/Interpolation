@@ -129,7 +129,8 @@ polynome *multPolynome(polynome *p1, polynome *p2)
 
 polynome *AdaptePoly(polynome *p){
   int x = p->maxDeg;
-  while((p->p[x] == 0) && (x > 0)){
+  float precision = 0.001;
+  while(((p->p[x] - precision) < 0) && ((p->p[x] + precision) > 0) && (x > 0)){
     x--;
   }
   polynome *Sol = creePolynome(x);

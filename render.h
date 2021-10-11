@@ -19,8 +19,8 @@
 #include <time.h>
 #include <math.h>
 
-#define FPS_TO_GET 60 /*!< Frames render per second*/
-#define TICK_TO_GET 60 /*!< Verification done per second*/
+#define FPS_TO_GET 25 /*!< Frames render per second*/
+#define TICK_TO_GET 2 /*!< Verification done per second*/
 
 
 Liste *RenderingInterpolation(Liste *l);
@@ -71,7 +71,7 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape);
  * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut redessiner
  * \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l);
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin);
 
 
 

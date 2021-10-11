@@ -1,6 +1,9 @@
 #include "render.h"
 #include "lagrange.h"
 #include "listePoint.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * \fn int main (int argc, char **argv)
@@ -20,7 +23,7 @@ Liste *RenderingInterpolation(Liste *l) {
 
   polynome *newt = ResolutionParNewton(*l);
   polynome *lagr = calculLagrange(*l);
-
+  
   Liste pointNewt = creerListe();
   Liste pointLagr = creerListe();
   long int LastFrame;
@@ -36,16 +39,49 @@ Liste *RenderingInterpolation(Liste *l) {
   int tickCount = 0;
   
   
-
+  int done = 0;
 
   int tmpCount = 0;
 
   SDL_Event event;
   SDL_Renderer *renderer = NULL;
 
+  
+  int graphXdeb = -10;
+  int graphYdeb = -10;
 
+  int graphXS = 20;
+  int graphYS = 20;
   
   create_Win(&renderer, window, &SizeX, &SizeY);
+
+
+  TTF_Font* Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
+
+  
+  float sol = 0;
+  point ptempo;
+  for(int i = 0; i < (graphXS+2); i++){
+    sol = 0;
+    for(int j = 0; j < newt->maxDeg+1; j++){
+      sol += newt->p[j] * pow((i+(graphXdeb)-1), j);
+    }
+    ptempo.x = (float)(i+graphXdeb-1);
+    ptempo.y = sol;
+    ajouteFin(&pointNewt, ptempo);
+  }
+
+  
+  for(int i = 0; i < (graphXS+2); i++){
+    sol = 0;
+    for(int j = 0; j < lagr->maxDeg+1; j++){
+      sol += lagr->p[j] * pow((float)(i+graphXdeb-1), j);
+    }
+    ptempo.x = (float)(i+graphXdeb-1);
+    ptempo.y = sol;
+    ajouteFin(&pointLagr, ptempo);
+  }
+
   
   /************Initialisation des variables de temps**************/
   LastFrame = getTime();
@@ -60,7 +96,7 @@ Liste *RenderingInterpolation(Liste *l) {
 
     if(NowTime - LastFrame > timeForNewFrame){
 
-      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l);
+      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l, Font, graphXdeb, graphYdeb, graphXS, graphYS);
 
 
     
@@ -69,7 +105,31 @@ Liste *RenderingInterpolation(Liste *l) {
       LastFrame += timeForNewFrame;
       fpsCount++;
     }else if(NowTime - LastTick > timeForNewTick){
+      if(!done){
+	ViderListe(&pointNewt);
+	done = 1;
+	for(int i = 0; i < (graphXS+2)*100; i++){
+	  sol = 0;
+	  for(int j = 0; j < newt->maxDeg+1; j++){
+	    sol += newt->p[j] * pow((float)(i/100.0f+(graphXdeb)-1), j);
+	  }
+	  ptempo.x = (float)(i/100.0f+graphXdeb-1);
+	  ptempo.y = sol;
+	  ajouteFin(&pointNewt, ptempo);
+	}
 
+  	ViderListe(&pointLagr);
+	for(int i = 0; i < (graphXS+2)*100; i++){
+	  sol = 0;
+	  for(int j = 0; j < lagr->maxDeg+1; j++){
+	    sol += lagr->p[j] * pow((float)(i/100.0f+graphXdeb-1), j);
+	  }
+	  ptempo.x = (float)(i/100.0f+graphXdeb-1);
+	  ptempo.y = sol;
+	  ajouteFin(&pointLagr, ptempo);
+	}
+	printf("On change\n");
+      }
       
       LastTick += timeForNewTick;
       tickCount++;
@@ -104,8 +164,9 @@ Liste *RenderingInterpolation(Liste *l) {
     
     if(NowTime > TimeCount){
       TimeCount+=1000000;
-      //printf("%d images cette seconde\n", fpsCount);
+      //printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
       fpsCount = 0;
+      tickCount = 0;
       tmpCount++;
     }
 
@@ -251,9 +312,13 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape){
  * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut
  * redessiner \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l){
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin){
   SDL_Rect rectangle;
+  int posMX;
+  int posMY;
+  SDL_GetMouseState(&posMX, &posMY);
 
+  //fond en blanc
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
   rectangle.x = 0;
   rectangle.y = 0;
@@ -261,70 +326,158 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
   rectangle.h = SY;
   SDL_RenderFillRect(renderer, &rectangle);
 
-
+  //lignes de séparation des différentes parties
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderDrawLine(renderer, 0, (7*SY)/8, SX, (7*SY)/8);
 
+  SDL_RenderDrawLine(renderer, (6*SX)/8, 0, (6*SX)/8, (7*SY)/8);
 
-
-
-
-
-
-  TTF_Font* Sans = TTF_OpenFont("Res/Quicksilver.ttf", 24);
 
   
-// this is the color in rgb format,
-// maxing out all would give you the color white,
-// and it will be your text's color
-SDL_Color Dark = {0, 0, 0};
+  
 
-// as TTF_RenderText_Solid could only be used on
-// SDL_Surface then you have to create the surface first
-SDL_Surface* surfaceMessage =
-      TTF_RenderText_Solid(Sans, "Testpons ?", Dark); 
+  //écrit le polynôme de newton
+  char s[1000];
+  SDL_Color Green = {0, 255, 0};
+  strcpy(s, "Newtone : ");
+  char tmp[20];
+  if(newt->maxDeg != 0){
+      sprintf(tmp, "%6.2f*x^%d", newt->p[newt->maxDeg], newt->maxDeg);
+    }else {
+      sprintf(tmp, "%6.2f", newt->p[newt->maxDeg]);
+    }
+  strcat(s, tmp);
+  for(int i = newt->maxDeg - 1; (i >-1) && (i > newt->maxDeg - 6); i--){
+    if(i != 0){
+      sprintf(tmp, " + %6.2f*x^%d", newt->p[i], i);
+    }else {
+      sprintf(tmp, " + %6.2f", newt->p[i]);
+    }
+    strcat(s, tmp);
+  }
+  if(newt ->maxDeg > 5){
+    strcat(s, " + ...");
+  }
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Font, s, Green); 
+  SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  SDL_Rect Message_rect;
+  Message_rect.x = SX/100; 
+  Message_rect.y = (7*SY + (SY/100))/8; 
+  Message_rect.w = (SX/9) * ((newt->maxDeg < 6)?newt->maxDeg+1 : 8);
+  Message_rect.h = SY/25; 
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
 
-// now you can convert it into a texture
-SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
-SDL_Rect Message_rect; //create a rect
-Message_rect.x = 0;  //controls the rect's x coordinate 
-Message_rect.y = 0; // controls the rect's y coordinte
-Message_rect.w = 100; // controls the width of the rect
-Message_rect.h = 100; // controls the height of the rect
+  //ecrit le polynome de lagrange
+  SDL_Color Blue = {0, 0, 255};
+  strcpy(s, "Lagrange : ");
+  if(lagr->maxDeg != 0){
+      sprintf(tmp, "%6.2f*x^%d", lagr->p[lagr->maxDeg], lagr->maxDeg);
+    }else {
+      sprintf(tmp, "%6.2f", lagr->p[lagr->maxDeg]);
+    }
+  strcat(s, tmp);
+  for(int i = lagr->maxDeg - 1; (i >-1) && (i > lagr->maxDeg - 6); i--){
+    if(i != 0){
+      sprintf(tmp, " + %6.2f*x^%d", lagr->p[i], i);
+    }else {
+      sprintf(tmp, " + %6.2f", lagr->p[i]);
+    }
+    strcat(s, tmp);
+  }
+  if(lagr ->maxDeg > 5){
+    strcat(s, " + ...");
+  }
+  surfaceMessage = TTF_RenderText_Solid(Font, s, Blue); 
+  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  Message_rect.x = SX/100; 
+  Message_rect.y = (8*SY - (SY/100))/8 - SY/25; 
+  Message_rect.w = (SX/9) * ((lagr->maxDeg < 6)?lagr->maxDeg+1 : 8);
+  Message_rect.h = SY/25; 
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
 
-// (0,0) is on the top left of the window/screen,
-// think a rect as the text's box,
-// that way it would be very simple to understand
-
-// Now since it's a texture, you have to put RenderCopy
-// in your game loop area, the area where the whole code executes
-
-// you put the renderer's name first, the Message,
-// the crop size (you can ignore this if you don't want
-// to dabble with cropping), and the rect which is the size
-// and coordinate of your texture
-SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-
-// Don't forget to free your surface and texture
-SDL_FreeSurface(surfaceMessage);
-SDL_DestroyTexture(Message);
 
   
-  /*
+  //ecrit l'emplacement du pointeur
+  SDL_Color Dark = {0, 0, 0};
+  sprintf(s, "Pointeur :");
+  surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
+  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  Message_rect.x = (SX*6)/8 + (SX/100); 
+  Message_rect.y = (SY/100); 
+  Message_rect.w = (SX/8);
+  Message_rect.h = SY/25; 
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
+  if(posMX >= 0 && posMX < (6*SX/8)){
+    sprintf(s, "x : %4.2f", ((((float)(posMX-(SX/100))/((6*SX/8)-(2*SX/100)))*(TXfin))+TXdeb));
+  }else {
+    sprintf(s, "x is out");
+  }
+  surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
+  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  Message_rect.x = (SX*6)/8 + (SX/100); 
+  Message_rect.y = (SY/100) + SY/25; 
+  Message_rect.w = (SX/8);
+  Message_rect.h = SY/25; 
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
+  if(posMY >= 0 && posMY < (7*SY/8)){
+    sprintf(s, "y : %4.2f", -((((float)(posMY-(SY/100))/((7*SY/8)-(2*SY/100)))*(TYfin))+TYdeb));
+  }else {
+    sprintf(s, "y is out");
+  }
+  surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
+  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  Message_rect.x = (SX*6)/8 + (SX/100); 
+  Message_rect.y = (SY/100) + (SY/100) + (2*SY)/25; 
+  Message_rect.w = (SX/8);
+  Message_rect.h = SY/25; 
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+  SDL_FreeSurface(surfaceMessage);
+  SDL_DestroyTexture(Message);
+
+
+
+  //Affichage de l'echelle du graphique
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-  SDL_RenderDrawLine(renderer,0,0,400, 400);
-  SDL_RenderDrawLine(renderer,400,0,0, 400);
-
-
-  for(float angle = 0 ; angle<2*3.1416 ; angle+=3.1416/20){
-    SDL_SetRenderDrawColor(renderer,
-                           (cos(angle*2)+1)*255/2,
-                           (cos(angle*5)+1)*255/2,
-                           (cos(angle)+1)*255/2,
-                           255);
-    SDL_RenderDrawPoint(renderer, 200 + 100 * cos(angle), 200 + 150 *sin(angle));
-    }*/
+  SDL_RenderDrawLine(renderer, SX/100, ((7*SY)/8)/2, (SX*6)/8  - 2*SX/200, ((7*SY)/8)/2);
+  SDL_RenderDrawLine(renderer, ((6*SX)/8)/2, SY/100, ((6*SX)/8)/2, (7*SY)/8 - 2*SY/200);
+  
+  Maillon *n = pointNewt.first;
+  Maillon *la = pointLagr.first;
+  
+  if(n != NULL){
+    while(n->suiv != NULL){
+      if((n->val.x < TXfin+TXdeb && n->val.x > TXdeb) && (n->val.y < TYfin+TYdeb && n->val.y > TYdeb)){
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	SDL_RenderDrawLine(renderer, ((n->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-n->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100), ((n->suiv->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-n->suiv->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100));
+      }
+      if((la->val.x < TXfin+TXdeb && la->val.x > TXdeb) && (la->val.y < TYfin+TYdeb && la->val.y > TYdeb)){
+      SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+      SDL_RenderDrawLine(renderer, ((la->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-la->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100), ((la->suiv->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-la->suiv->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100));
+      }
+      la = la->suiv;
+      n = n->suiv;
+    }
+  }
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  Maillon *m = l.first;
+  while(m != NULL){
+    rectangle.x = ((m->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100) - (SX/400);
+    rectangle.y = ((-m->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100) - (SX/400);
+    rectangle.w = 2*SX/400;
+    rectangle.h = 2*SX/400;
+    SDL_RenderFillRect(renderer, &rectangle);
+    m = m->suiv;
+  }
+  
 }
 
 
