@@ -60,6 +60,7 @@ void affichepolynome(polynome *p)
       printf("%f ", p->p[i]);
     }
   }
+  printf("\n");
 }
 
 polynome *addPolynome(polynome *p1, polynome *p2)
@@ -67,11 +68,14 @@ polynome *addPolynome(polynome *p1, polynome *p2)
   int i;
   polynome *poly =
       creePolynome((p1->maxDeg > p2->maxDeg) ? p1->maxDeg : p2->maxDeg);
-  for (i = 0; i < p1->maxDeg; ++i)
+
+  for (i = 0; i < p1->maxDeg + 1; ++i)
   {
+    /* printf("Degrèse de p1 %d \n", p1->maxDeg); */
     poly->p[i] = p1->p[i];
   }
-  for (i = 0; i < p2->maxDeg; ++i)
+
+  for (i = 0; i < p2->maxDeg + 1; ++i)
   {
     poly->p[i] += p2->p[i];
   }
@@ -105,16 +109,15 @@ polynome *transformefloatenpoly(float unfloat)
   return poly;
 }
 
-polynome *
-multPolynome(polynome *p1, polynome *p2)
+polynome *multPolynome(polynome *p1, polynome *p2)
 {
 
   int i, j;
-  polynome *poly = creePolynome((p1->maxDeg + p2->maxDeg) - 1);
+  polynome *poly = creePolynome(p1->maxDeg + p2->maxDeg);
 
-  for (i = 0; i < p1->maxDeg; ++i)
+  for (i = 0; i < p1->maxDeg + 1; ++i)
   {
-    for (j = 0; j < p2->maxDeg; ++j)
+    for (j = 0; j < p2->maxDeg + 1; ++j)
     {
       poly->p[i + j] += p1->p[i] * p2->p[j];
     }
@@ -123,7 +126,3 @@ multPolynome(polynome *p1, polynome *p2)
   destroyPolynome(p2);
   return poly;
 }
-
-
-
-

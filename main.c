@@ -68,7 +68,7 @@ int main()
   ajouteDebut(&l, p);
   float **points;
 
-  points = ListeToTabsPoints(l);
+  /* points = ListeToTabsPoints(l); */
 
   /* for (int i = 0; i < 4; i++) */
   /* { */
@@ -77,7 +77,9 @@ int main()
 
   polynome *fonction = calculLagrange(l);
 
-  /* affichepolynome(fonction); */
+  affichepolynome(fonction);
+  fonction = ResolutionParNewton(l);
+  affichepolynome(fonction);
 
   //  for(int i = 0; i < 4; i++){
   //    printf("point : %f, %f\n", points[0][i], points[1][i]);

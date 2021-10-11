@@ -25,11 +25,9 @@ polynome *calculLi(int numero, Liste points)
   /* point;  transfore liste en tab*/
 
   float **pointstab = ListeToTabsPoints(points);
-
-  affichetab(pointstab, ListLenght(points));
   int i;
-  float resultat;
-  polynome *Li = creePolynome(0);
+  /* float resultat; */
+  polynome *Li = creePolynome(1);
   Li->p[0] = 1;
 
   polynome *tp = creePolynome(0);
@@ -44,26 +42,20 @@ polynome *calculLi(int numero, Liste points)
     else
     {
       polynome *x = creePolynome(1);
+
       x->p[1] = 1;
 
-      polynome *y = creePolynome(1);
-      y->p[1] = 4;
-
-      tp = susPolynome(x, y);
-      Li = tp;
-
-      printf("degrès max de mon poly est :%d\n", Li->maxDeg);
-
-      /* ça c'est bon */
-      /* printf("poour i = %d, on à le x qui vaut est :%f\n", i,
-       * pointstab[0][i]); */
-
-      /* Li = multPolynome(Li, x); */
-      /* multPolynome(susPolynome(x, transformefloatenpoly(pointstab[0][i])), */
-      /* transformefloatenpoly( */
-      /* 1 / (pointstab[0][numero] - pointstab[0][i])))); */
+      /* affichepolynome(transformefloatenpoly((pointstab[0][numero]))); */
+      polynome *y = addPolynome(x, transformefloatenpoly(-pointstab[0][i]));
+      printf("degrès max de mon poly y est :%d\n", y->maxDeg);
+      /* affichepolynome(y); */
+      polynome *tmp = multPolynome(
+          y,
+          transformefloatenpoly(1 / (pointstab[0][numero] - pointstab[0][i])));
+      Li = multPolynome(Li, tmp);
     }
   }
+  affichepolynome(Li);
 
   return Li;
 }
@@ -75,14 +67,12 @@ polynome *calculLagrange(Liste points)
   float **pointstab;
   pointstab = ListeToTabsPoints(points);
 
-  /* for (i = 0; i < ListLenght(points); ++i) */
-  /* { */
-
-  fonction = calculLi(i, points);
-  /* fonction = addPolynome( */
-  /* fonction, multPolynome(transformefloatenpoly(pointstab[1][i]), */
-  /* calculLi(ListLenght(points), i, points))); */
-  /* } */
+  for (i = 0; i < ListLenght(points); ++i)
+  {
+    fonction = addPolynome(fonction,
+                           multPolynome(transformefloatenpoly(pointstab[1][i]),
+                                        calculLi(i, points)));
+  }
   /* printf("taille fonction = %d\n", fonction->maxDeg); */
 
   return fonction;
