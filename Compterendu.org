@@ -298,6 +298,10 @@ Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou
 
 * Présentation des Jeux d'essais (avec graphique)
 
+
+Pour ses différents jeux d'essais, on peut constater plusieurs choses :
+
+
 * Commentaires des jeux d'essais
 
 1. unicité du polynôme obtenu

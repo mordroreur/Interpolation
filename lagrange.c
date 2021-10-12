@@ -20,6 +20,21 @@
  * \return *polynome - Because we want Li
  */
 
+float **untableaudepoint(int taille)
+{
+  int i, j;
+  float **res = (float **)malloc(2 * sizeof(float *));
+  res[0] = (float *)malloc(taille * sizeof(float));
+  res[1] = (float *)malloc(taille * sizeof(float));
+
+  for (i = 0; i < taille; ++i)
+  {
+    res[0][i] = i;
+    res[1][i] = i;
+  }
+  return res;
+}
+
 polynome *calculLi(int numero, Liste points)
 {
 

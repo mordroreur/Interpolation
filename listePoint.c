@@ -228,8 +228,8 @@ void supprMaillon(Liste *l, int nbMaillon){
   }
 }
 
-
-float **ListeToTabsPoints(Liste l){
+float **ListeToTabsPoints(Liste l)
+{
   int n = ListLenght(l);
   float **res = (float **)malloc(2*sizeof(float *));
   res[0] = (float *)malloc(n*sizeof(float));
@@ -244,16 +244,16 @@ float **ListeToTabsPoints(Liste l){
   }
 
   return res;
-
-  
 }
 
-void ViderListe(Liste *l){
+void ViderListe(Liste *l)
+{
   Maillon *old;
   Maillon *new;
-  
+
   new = l->first;
-  while (new != NULL) {
+  while (new != NULL)
+  {
     old = new;
     new = new->suiv;
     free(old);
@@ -261,3 +261,17 @@ void ViderListe(Liste *l){
   l->first = NULL;
 }
 
+Liste *creerunelistealéa(int taille)
+{
+  int i;
+  Liste maliste = creerListe();
+  Liste *psurliste = &maliste;
+  point unpoint;
+  for (i = 0; i < taille; ++i)
+  {
+    unpoint[0][0] = i;
+    unpoint[1][0] = rand() % MAX);
+    ajouteFin(psurliste, unpoint);
+  }
+  return psurliste;
+}
