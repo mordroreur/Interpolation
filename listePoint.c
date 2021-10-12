@@ -261,17 +261,17 @@ void ViderListe(Liste *l)
   l->first = NULL;
 }
 
-Liste *creerunelistealéa(int taille)
-{
-  int i;
-  Liste maliste = creerListe();
-  Liste *psurliste = &maliste;
-  point unpoint;
-  for (i = 0; i < taille; ++i)
-  {
-    unpoint[0][0] = i;
-    unpoint[1][0] = rand() % MAX);
-    ajouteFin(psurliste, unpoint);
-  }
-  return psurliste;
-}
+/* Liste *creerunelistealéa(int taille) */
+/* { */
+/*   int i; */
+/*   Liste maliste = creerListe(); */
+/*   Liste *psurliste = &maliste; */
+/*   point unpoint; */
+/*   for (i = 0; i < taille; ++i) */
+/*   { */
+/*     unpoint[0][0] = i; */
+/*     unpoint[1][0] = rand() % MAX); */
+/*     ajouteFin(psurliste, unpoint); */
+/*   } */
+/*   return psurliste; */
+/* } */
