@@ -24,9 +24,9 @@ polynome *ResolutionParNewton(Liste lstpoints){
   float **Points = ListeToTabsPoints(lstpoints);
   polynome *Solution = creePolynome(1);
   polynome *tmp;
-  float **triangle = (float **)malloc(sizeof(float *) * (pointNB));
+  long double **triangle = (long double **)malloc(sizeof(long double *) * (pointNB));
   for(int i = 0; i < pointNB; i++){
-    triangle[i] = (float *)malloc(sizeof(float) * (pointNB-i));
+    triangle[i] = (long double *)malloc(sizeof(long double) * (pointNB-i));
   }
 
   for(int i = 0; i < pointNB; i++){

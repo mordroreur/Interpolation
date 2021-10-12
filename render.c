@@ -23,6 +23,8 @@ Liste *RenderingInterpolation(Liste *l) {
 
   polynome *newt = ResolutionParNewton(*l);
   polynome *lagr = calculLagrange(*l);
+  float lx = -10000000000;
+  float ly = -10000000000;
   
   Liste pointNewt = creerListe();
   Liste pointLagr = creerListe();
@@ -38,6 +40,8 @@ Liste *RenderingInterpolation(Liste *l) {
   
   int tickCount = 0;
   
+  int sourisX;
+  int sourisY;
   
   int done = 0;
 
@@ -106,6 +110,8 @@ Liste *RenderingInterpolation(Liste *l) {
       fpsCount++;
     }else if(NowTime - LastTick > timeForNewTick){
       if(!done){
+	newt = ResolutionParNewton(*l);
+	lagr = calculLagrange(*l);
 	ViderListe(&pointNewt);
 	done = 1;
 	for(int i = 0; i < (graphXS+2)*100; i++){
@@ -128,7 +134,6 @@ Liste *RenderingInterpolation(Liste *l) {
 	  ptempo.y = sol;
 	  ajouteFin(&pointLagr, ptempo);
 	}
-	printf("On change\n");
       }
       
       LastTick += timeForNewTick;
@@ -153,7 +158,7 @@ Liste *RenderingInterpolation(Liste *l) {
       switch(event.type){
       case SDL_KEYDOWN:break;//KeyDown(&event.key);break;
       case SDL_KEYUP:keyUp(&event.key, &Stape);break;
-	//case SDL_MOUSEBUTTONDOWN:mousePress(&event.button);break;
+      case SDL_MOUSEBUTTONDOWN: if(event.button.button == SDL_BUTTON_LEFT){SDL_GetMouseState(&sourisX, &sourisY);if((sourisY >= 0 && sourisY < (7*SizeY/8)) && (sourisX >= 0 && sourisX < (6*SizeX/8))){point p; p.x = ((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb);p.y = -((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb);if(p.x != lx && p.y != ly){ajouteFin(l, p);done = 0;}}};break;
       case SDL_QUIT:Stape = 0;break;
       default:break;
       }  

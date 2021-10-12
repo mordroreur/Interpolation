@@ -19,7 +19,7 @@
 #include <time.h>
 #include <math.h>
 
-#define FPS_TO_GET 25 /*!< Frames render per second*/
+#define FPS_TO_GET 10 /*!< Frames render per second*/
 #define TICK_TO_GET 2 /*!< Verification done per second*/
 
 
