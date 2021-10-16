@@ -14,7 +14,7 @@ polynome *creePolynome(int maxDeg)
 
   poly->maxDeg = maxDeg;
   poly->p = (float *)malloc(sizeof(float) * (maxDeg + 1));
-  for (i = 0; i < maxDeg; ++i)
+  for (i = 0; i < maxDeg+1; ++i)
   {
     poly->p[i] = 0;
   }
