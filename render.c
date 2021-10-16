@@ -1,6 +1,7 @@
 #include "render.h"
 #include "lagrange.h"
 #include "listePoint.h"
+#include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,6 +45,7 @@ Liste *RenderingInterpolation(Liste *l) {
   int sourisY;
   
   int done = 0;
+  SDL_Texture  *Graph;
 
   int tmpCount = 0;
 
@@ -57,7 +59,7 @@ Liste *RenderingInterpolation(Liste *l) {
   int graphXS = 20;
   int graphYS = 20;
   
-  create_Win(&renderer, window, &SizeX, &SizeY);
+  create_Win(&renderer, window, &SizeX, &SizeY, &Graph);
 
 
   TTF_Font* Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
@@ -100,11 +102,11 @@ Liste *RenderingInterpolation(Liste *l) {
 
     if(NowTime - LastFrame > timeForNewFrame){
 
-      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l, Font, graphXdeb, graphYdeb, graphXS, graphYS);
-
+      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l, Font, graphXdeb, graphYdeb, graphXS, graphYS, Graph);
 
     
       SDL_RenderPresent(renderer);
+      SDL_RenderClear(renderer);
 
       LastFrame += timeForNewFrame;
       fpsCount++;
@@ -134,7 +136,70 @@ Liste *RenderingInterpolation(Liste *l) {
 	  ptempo.y = sol;
 	  ajouteFin(&pointLagr, ptempo);
 	}
+
+	SDL_SetRenderTarget(renderer, Graph);
+	  //mise du fond en blanc
+	SDL_Rect rectangle;
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	rectangle.x = 0;
+	rectangle.y = 0;
+	rectangle.w = SizeX;
+	rectangle.h = SizeY;
+	SDL_RenderFillRect(renderer, &rectangle);
+    
+	
+    //Affichage de l'echelle du graphique
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    
+    SDL_RenderDrawLine(renderer, (float)(SizeX)/100, (SizeY)/2 + 1, SizeX - 2*SizeX/200,
+		       (SizeY)/2);
+    SDL_RenderDrawLine(renderer, (SizeX)/2, (float)(SizeY)/100, (SizeX)/2,
+		       SizeY - 2*SizeY/200);
+
+    Maillon *n = pointNewt.first;
+    Maillon *la = pointLagr.first;
+    
+    if(n != NULL){
+      while(n->suiv != NULL){
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	SDL_RenderDrawLine(renderer, ((n->val.x - graphXdeb)/graphXS) *
+			   (SizeX-(2*SizeX/100)) + (SizeX/100),((-n->val.y - graphYdeb)/graphXS) *
+			   (SizeY-(2*SizeY/100)) + (SizeY/100), ((n->suiv->val.x - graphXdeb)/graphXS) *
+			   (SizeX-(2*SizeX/100)) + (SizeX/100),((-n->suiv->val.y - graphYdeb)/graphXS) *
+			   (SizeY-(2*SizeY/100)) + (SizeY/100));
+	
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_RenderDrawLine(renderer, ((la->val.x - graphXdeb)/graphXS) *
+			   (SizeX-(2*SizeX/100)) + (SizeX/100),((-la->val.y - graphYdeb)/graphXS) *
+			   (SizeY-(2*SizeY/100)) + (SizeY/100), ((la->suiv->val.x - graphXdeb)/graphXS) *
+			   (SizeX-(2*SizeX/100)) + (SizeX/100),((-la->suiv->val.y - graphYdeb)/graphXS) *
+			   (SizeY-(2*SizeY/100)) + (SizeY/100));
+	
+	la = la->suiv;
+	n = n->suiv;
       }
+    }
+    
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    Maillon *m = l->first;
+    while(m != NULL){
+      rectangle.x = ((m->val.x - graphXdeb)/graphXS) * (SizeX-(2*SizeX/100)) + (SizeX/100)
+	- (SizeX/400); rectangle.y = ((-m->val.y - graphYdeb)/graphXS) * (SizeY-(2*SizeY/100)) +
+		      (SizeY/100) - (SizeX/400); rectangle.w = 2*SizeX/400; rectangle.h = 2*SizeX/400;
+      SDL_RenderFillRect(renderer, &rectangle);
+      m = m->suiv;
+      }
+
+
+    
+
+
+    
+    SDL_SetRenderTarget(renderer, NULL);
+	
+      }
+      
       
       LastTick += timeForNewTick;
       tickCount++;
@@ -147,6 +212,7 @@ Liste *RenderingInterpolation(Liste *l) {
 	SleepForCPU = (long)(timeForNewTick - (NowTime-LastTick))/300;
       }
       SDL_Delay(SleepForCPU);
+      //printf("on sleep de : %ld\n", SleepForCPU);
       
       
     }
@@ -169,7 +235,7 @@ Liste *RenderingInterpolation(Liste *l) {
     
     if(NowTime > TimeCount){
       TimeCount+=1000000;
-      //printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
+      printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
       fpsCount = 0;
       tickCount = 0;
       tmpCount++;
@@ -248,7 +314,7 @@ void end_sdl(char ok, char const * msg, SDL_Renderer *renderer, SDL_Window *wind
  * \param **renderer l'adresse de laffichage dans la fenêtre
  * \return void
  */
-void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY){
+void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY, SDL_Texture  **Graph){
   SDL_DisplayMode screen_dimension;
 
   /* Initialisation de la SDL  + gestion de l'échec possible */
@@ -267,7 +333,7 @@ void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY){
   if (window == NULL) end_sdl(0,"ERROR WINDOW CREATION", *renderer, window);
 
   /* Création du renderer */ 
-  *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
   if (*renderer == NULL) end_sdl(0,"ERROR RENDERER CREATION", *renderer, window);
 
   if(TTF_Init()==-1) {
@@ -277,6 +343,8 @@ void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY){
 
 
   SDL_GetWindowSize(window, SX, SY);
+
+  *Graph = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, *SX, *SY);
 
 }
 
@@ -317,7 +385,7 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape){
  * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut
  * redessiner \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin){
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin, SDL_Texture  *Graph){
   SDL_Rect rectangle;
   int posMX;
   int posMY;
@@ -325,8 +393,15 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
 
   //fond en blanc
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-  rectangle.x = 0;
+  rectangle.x = (6*SX/8);
   rectangle.y = 0;
+  rectangle.w = SX;
+  rectangle.h = SY;
+  SDL_RenderFillRect(renderer, &rectangle);
+
+
+  rectangle.x = (0);
+  rectangle.y = (7*SY/8);
   rectangle.w = SX;
   rectangle.h = SY;
   SDL_RenderFillRect(renderer, &rectangle);
@@ -342,6 +417,7 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
   
 
   //écrit le polynôme de newton
+  
   char s[1000];
   SDL_Color Green = {0, 255, 0};
   strcpy(s, "Newtone : ");
@@ -450,38 +526,17 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
 
 
 
-  //Affichage de l'echelle du graphique
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-  SDL_RenderDrawLine(renderer, SX/100, ((7*SY)/8)/2, (SX*6)/8  - 2*SX/200, ((7*SY)/8)/2);
-  SDL_RenderDrawLine(renderer, ((6*SX)/8)/2, SY/100, ((6*SX)/8)/2, (7*SY)/8 - 2*SY/200);
-  
-  Maillon *n = pointNewt.first;
-  Maillon *la = pointLagr.first;
-  
-  if(n != NULL){
-    while(n->suiv != NULL){
-      if((n->val.x < TXfin+TXdeb && n->val.x > TXdeb) && (n->val.y < TYfin+TYdeb && n->val.y > TYdeb)){
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderDrawLine(renderer, ((n->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-n->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100), ((n->suiv->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-n->suiv->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100));
-      }
-      if((la->val.x < TXfin+TXdeb && la->val.x > TXdeb) && (la->val.y < TYfin+TYdeb && la->val.y > TYdeb)){
-      SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-      SDL_RenderDrawLine(renderer, ((la->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-la->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100), ((la->suiv->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100),((-la->suiv->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100));
-      }
-      la = la->suiv;
-      n = n->suiv;
-    }
-  }
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-  Maillon *m = l.first;
-  while(m != NULL){
-    rectangle.x = ((m->val.x - TXdeb)/TXfin) * ((6*SX/8)-(2*SX/100)) + (SX/100) - (SX/400);
-    rectangle.y = ((-m->val.y - TYdeb)/TXfin) * ((7*SY/8)-(2*SY/100)) + (SY/100) - (SX/400);
-    rectangle.w = 2*SX/400;
-    rectangle.h = 2*SX/400;
-    SDL_RenderFillRect(renderer, &rectangle);
-    m = m->suiv;
-  }
+
+  rectangle.x = 0;
+  rectangle.y = 0;
+  rectangle.w = (6*SX/8);
+  rectangle.h = (7*SY/8);
+  SDL_RenderFillRect(renderer, &rectangle);
+  SDL_RenderCopy(renderer, Graph, NULL, &rectangle);
+
+    
+    
+
   
 }
 

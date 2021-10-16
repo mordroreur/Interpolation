@@ -19,8 +19,8 @@
 #include <time.h>
 #include <math.h>
 
-#define FPS_TO_GET 10 /*!< Frames render per second*/
-#define TICK_TO_GET 2 /*!< Verification done per second*/
+#define FPS_TO_GET 60 /*!< Frames render per second*/
+#define TICK_TO_GET 60 /*!< Verification done per second*/
 
 
 Liste *RenderingInterpolation(Liste *l);
@@ -33,7 +33,7 @@ Liste *RenderingInterpolation(Liste *l);
  * \param **renderer l'adresse de laffichage dans la fenêtre
  * \return void
  */
-void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY);
+void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY, SDL_Texture  **Graph);
 
 /**
  * \fn void end_sdl(char ok, char const * msg, SDL_Window *window, SDL_Renderer
@@ -71,7 +71,7 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape);
  * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut redessiner
  * \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin);
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin, SDL_Texture  *Graph);
 
 
 
