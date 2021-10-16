@@ -131,7 +131,7 @@ polynome *AdaptePoly(polynome *p)
 /* Sert à R, car j'avais pas vu m'en ya besoin des 0.00004 etc */
 void ViderPoly(polynome *p)
 {
-  float zero = 0;
+  //float zero = 0;
   for (int i = (p->maxDeg - 1); i >= 0; --i)
   {
     if ((p->p[i] <= 0.0009) && (p->p[i] >= -0.0009))

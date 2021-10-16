@@ -1,7 +1,9 @@
 #include "render.h"
 #include "lagrange.h"
 #include "listePoint.h"
+#include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_render.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,6 +45,8 @@ Liste *RenderingInterpolation(Liste *l) {
   
   int sourisX;
   int sourisY;
+
+  int nbPoints = 10000;
   
   int done = 0;
   SDL_Texture  *Graph;
@@ -116,23 +120,23 @@ Liste *RenderingInterpolation(Liste *l) {
 	lagr = calculLagrange(*l);
 	ViderListe(&pointNewt);
 	done = 1;
-	for(int i = 0; i < (graphXS+2)*100; i++){
+	for(int i = 0; i < nbPoints; i++){
 	  sol = 0;
 	  for(int j = 0; j < newt->maxDeg+1; j++){
-	    sol += newt->p[j] * pow((float)(i/100.0f+(graphXdeb)-1), j);
+	    sol += newt->p[j] * pow((float)(graphXdeb + (i*(float)(graphXS)/nbPoints)), j);
 	  }
-	  ptempo.x = (float)(i/100.0f+graphXdeb-1);
+	  ptempo.x = (float)((i*(float)(graphXS)/nbPoints) + graphXdeb);
 	  ptempo.y = sol;
 	  ajouteFin(&pointNewt, ptempo);
 	}
 
   	ViderListe(&pointLagr);
-	for(int i = 0; i < (graphXS+2)*100; i++){
+	for(int i = 0; i < nbPoints; i++){
 	  sol = 0;
 	  for(int j = 0; j < lagr->maxDeg+1; j++){
-	    sol += lagr->p[j] * pow((float)(i/100.0f+graphXdeb-1), j);
+	    sol += lagr->p[j] * pow((float)(graphXdeb + (i*(float)(graphXS)/nbPoints)), j);
 	  }
-	  ptempo.x = (float)(i/100.0f+graphXdeb-1);
+	  ptempo.x = graphXdeb + (i*(float)(graphXS)/nbPoints);
 	  ptempo.y = sol;
 	  ajouteFin(&pointLagr, ptempo);
 	}
@@ -224,7 +228,8 @@ Liste *RenderingInterpolation(Liste *l) {
       switch(event.type){
       case SDL_KEYDOWN:break;//KeyDown(&event.key);break;
       case SDL_KEYUP:keyUp(&event.key, &Stape);break;
-      case SDL_MOUSEBUTTONDOWN: if(event.button.button == SDL_BUTTON_LEFT){SDL_GetMouseState(&sourisX, &sourisY);if((sourisY >= 0 && sourisY < (7*SizeY/8)) && (sourisX >= 0 && sourisX < (6*SizeX/8))){point p; p.x = ((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb);p.y = -((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb);if(p.x != lx && p.y != ly){ajouteFin(l, p);done = 0;}}};break;
+      case SDL_MOUSEBUTTONDOWN:
+	if(event.button.button == SDL_BUTTON_LEFT){SDL_GetMouseState(&sourisX, &sourisY);if((sourisY >= 0 && sourisY < (7*SizeY/8)) && (sourisX >= 0 && sourisX < (6*SizeX/8))){point p; p.x = ((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb);p.y = -((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb);if(p.x != lx && p.y != ly){ajouteFin(l, p);done = 0;}}}else if(event.button.button == SDL_BUTTON_RIGHT){SDL_GetMouseState(&sourisX, &sourisY); Maillon *m = l->first; float dist = graphXS/20;point p; while(m != NULL){if(sqrt(pow(((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb)-m->val.x, 2) + pow(-((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb)-m->val.y, 2)) < dist){p = m->val; dist = sqrt(pow(((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb)-m->val.x, 2) + pow(-((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb)-m->val.y, 2));}m = m->suiv;} if(dist < graphXS/20){supprValeur(l, p); done = 0;}};break;
       case SDL_QUIT:Stape = 0;break;
       default:break;
       }  
@@ -235,7 +240,7 @@ Liste *RenderingInterpolation(Liste *l) {
     
     if(NowTime > TimeCount){
       TimeCount+=1000000;
-      printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
+      //printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
       fpsCount = 0;
       tickCount = 0;
       tmpCount++;
