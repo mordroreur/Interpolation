@@ -27,6 +27,6 @@ polynome *addPolynome(polynome *p1, polynome *p2);
 polynome *multPolynome(polynome *p1, polynome *p2);
 
 polynome *AdaptePoly(polynome *p);
-
+void ViderPoly(polynome *p);
 
 #endif

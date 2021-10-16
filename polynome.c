@@ -109,17 +109,35 @@ polynome *multPolynome(polynome *p1, polynome *p2)
   return poly;
 }
 
-polynome *AdaptePoly(polynome *p){
+polynome *AdaptePoly(polynome *p)
+{
   int x = p->maxDeg;
-  //float precision = 0.01;
-  //while(((p->p[x] - precision) < 0) && ((p->p[x] + precision) > 0) && (x > 0)){
-  while((p->p[x] == 0) && (x > 0)){
+  // float precision = 0.01;
+  // while(((p->p[x] - precision) < 0) && ((p->p[x] + precision) > 0) && (x >
+  // 0)){
+  while ((p->p[x] == 0) && (x > 0))
+  {
     x--;
   }
   polynome *Sol = creePolynome(x);
-  for(int i = 0; i < x+1; i++){
+  for (int i = 0; i < x + 1; i++)
+  {
     Sol->p[i] = p->p[i];
   }
   destroyPolynome(p);
   return Sol;
+}
+
+/* Sert à R, car j'avais pas vu m'en ya besoin des 0.00004 etc */
+void ViderPoly(polynome *p)
+{
+  float zero = 0;
+  for (int i = (p->maxDeg - 1); i >= 0; --i)
+  {
+    if ((p->p[i] <= 0.0009) && (p->p[i] >= -0.0009))
+    {
+      /* free(p->p[i]); */
+      p->maxDeg = p->maxDeg - 1;
+    }
+  }
 }

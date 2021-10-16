@@ -101,5 +101,6 @@ polynome *calculLagrange(Liste points)
                                         calculLi(i, points)));
   }
 
+  /* ViderPoly(fonction); */
   return fonction;
 }
