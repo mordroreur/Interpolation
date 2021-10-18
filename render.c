@@ -16,269 +16,366 @@
  * \param argv argumentss entrés lors de l'appelle du programme
  * \return 0 - Si tout c'est bien passé
  */
-Liste *RenderingInterpolation(Liste *l) {
+Liste *RenderingInterpolation(Liste *l)
+{
 
   SDL_Window *window = NULL; /*!< Adresse de la fenêtre que l'on va créer. */
 
-  int Stape = 10; /*!< Etat actuelle du jeu. */
+  int Stape = 10;   /*!< Etat actuelle du jeu. */
   int SizeX = 1200; /*!< Taille de l'écran en largeur. */
-  int SizeY = 750; /*!< Taille de l'écran en longueur. */
+  int SizeY = 750;  /*!< Taille de l'écran en longueur. */
 
   polynome *newt = ResolutionParNewton(*l);
   polynome *lagr = calculLagrange(*l);
   float lx = -10000000000;
   float ly = -10000000000;
-  
+
   Liste pointNewt = creerListe();
   Liste pointLagr = creerListe();
   long int LastFrame;
   long int TimeCount;
   long int NowTime;
-  long int timeForNewFrame = 1000000/FPS_TO_GET;
-  
+  long int timeForNewFrame = 1000000 / FPS_TO_GET;
+
   int fpsCount = 0;
 
   long int LastTick;
-  long int timeForNewTick = 1000000/TICK_TO_GET;
-  
+  long int timeForNewTick = 1000000 / TICK_TO_GET;
+
   int tickCount = 0;
-  
+
   int sourisX;
   int sourisY;
 
+  /* Nombre de points à chargé */
   int nbPoints = 10000;
-  
+
+  /* statut. Si 1 alors réactualisé */
   int done = 0;
-  SDL_Texture  *Graph;
+  SDL_Texture *Graph;
 
   int tmpCount = 0;
 
   SDL_Event event;
   SDL_Renderer *renderer = NULL;
 
-  
   int graphXdeb = -10;
   int graphYdeb = -10;
 
   int graphXS = 20;
   int graphYS = 20;
-  
+
   create_Win(&renderer, window, &SizeX, &SizeY, &Graph);
 
+  /* choisit la fonte */
+  TTF_Font *Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
 
-  TTF_Font* Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
-
-  
+  /* calcul des deux courbes  */
   float sol = 0;
   point ptempo;
-  for(int i = 0; i < (graphXS+2); i++){
+  for (int i = 0; i < (graphXS + 2); i++)
+  {
     sol = 0;
-    for(int j = 0; j < newt->maxDeg+1; j++){
-      sol += newt->p[j] * pow((i+(graphXdeb)-1), j);
+    for (int j = 0; j < newt->maxDeg + 1; j++)
+    {
+      sol += newt->p[j] * pow((i + (graphXdeb)-1), j);
     }
-    ptempo.x = (float)(i+graphXdeb-1);
+    ptempo.x = (float)(i + graphXdeb - 1);
     ptempo.y = sol;
     ajouteFin(&pointNewt, ptempo);
   }
 
-  
-  for(int i = 0; i < (graphXS+2); i++){
+  for (int i = 0; i < (graphXS + 2); i++)
+  {
     sol = 0;
-    for(int j = 0; j < lagr->maxDeg+1; j++){
-      sol += lagr->p[j] * pow((float)(i+graphXdeb-1), j);
+    for (int j = 0; j < lagr->maxDeg + 1; j++)
+    {
+      sol += lagr->p[j] * pow((float)(i + graphXdeb - 1), j);
     }
-    ptempo.x = (float)(i+graphXdeb-1);
+    ptempo.x = (float)(i + graphXdeb - 1);
     ptempo.y = sol;
     ajouteFin(&pointLagr, ptempo);
   }
 
-  
   /************Initialisation des variables de temps**************/
   LastFrame = getTime();
   LastTick = getTime();
   TimeCount = getTime();
   NowTime = getTime();
 
-  
   /************Début de la boucle principale**********************/
-  while(Stape){
+  while (Stape)
+  {
     NowTime = getTime();
 
-    if(NowTime - LastFrame > timeForNewFrame){
+    if (NowTime - LastFrame > timeForNewFrame)
+    {
 
-      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l, Font, graphXdeb, graphYdeb, graphXS, graphYS, Graph);
+      draw(renderer, SizeX, SizeY, newt, lagr, pointNewt, pointLagr, *l, Font,
+           graphXdeb, graphYdeb, graphXS, graphYS, Graph);
 
-    
       SDL_RenderPresent(renderer);
       SDL_RenderClear(renderer);
 
       LastFrame += timeForNewFrame;
       fpsCount++;
-    }else if(NowTime - LastTick > timeForNewTick){
-      if(!done){
-	newt = ResolutionParNewton(*l);
-	lagr = calculLagrange(*l);
-	ViderListe(&pointNewt);
-	done = 1;
-	for(int i = 0; i < nbPoints; i++){
-	  sol = 0;
-	  for(int j = 0; j < newt->maxDeg+1; j++){
-	    sol += newt->p[j] * pow((float)(graphXdeb + (i*(float)(graphXS)/nbPoints)), j);
-	  }
-	  ptempo.x = (float)((i*(float)(graphXS)/nbPoints) + graphXdeb);
-	  ptempo.y = sol;
-	  ajouteFin(&pointNewt, ptempo);
-	}
-
-  	ViderListe(&pointLagr);
-	for(int i = 0; i < nbPoints; i++){
-	  sol = 0;
-	  for(int j = 0; j < lagr->maxDeg+1; j++){
-	    sol += lagr->p[j] * pow((float)(graphXdeb + (i*(float)(graphXS)/nbPoints)), j);
-	  }
-	  ptempo.x = graphXdeb + (i*(float)(graphXS)/nbPoints);
-	  ptempo.y = sol;
-	  ajouteFin(&pointLagr, ptempo);
-	}
-
-	SDL_SetRenderTarget(renderer, Graph);
-	  //mise du fond en blanc
-	SDL_Rect rectangle;
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	rectangle.x = 0;
-	rectangle.y = 0;
-	rectangle.w = SizeX/2;
-	rectangle.h = SizeY/2;
-	SDL_RenderFillRect(renderer, &rectangle);
-    
-	
-    //Affichage de l'echelle du graphique
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-    
-    SDL_RenderDrawLine(renderer, (float)(SizeX/2)/100, (SizeY/2)/2 + 1, SizeX/2 - 2*SizeX/2/200,
-		       (SizeY/2)/2);
-    SDL_RenderDrawLine(renderer, (SizeX/2)/2, (float)(SizeY/2)/100, (SizeX/2)/2,
-		       SizeY/2 - 2*SizeY/2/200);
-
-    Maillon *n = pointNewt.first;
-    Maillon *la = pointLagr.first;
-    
-    if(n != NULL){
-      while(n->suiv != NULL){
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderDrawLine(renderer, ((n->val.x - graphXdeb)/graphXS) *
-			   (SizeX/2-(2*SizeX/2/100)) + (SizeX/2/100),((-n->val.y - graphYdeb)/graphXS) *
-			   (SizeY/2-(2*SizeY/2/100)) + (SizeY/2/100), ((n->suiv->val.x - graphXdeb)/graphXS) *
-			   (SizeX/2-(2*SizeX/2/100)) + (SizeX/2/100),((-n->suiv->val.y - graphYdeb)/graphXS) *
-			   (SizeY/2-(2*SizeY/2/100)) + (SizeY/2/100));
-	
-	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-	SDL_RenderDrawLine(renderer, ((la->val.x - graphXdeb)/graphXS) *
-			   (SizeX/2-(2*SizeX/2/100)) + (SizeX/2/100),((-la->val.y - graphYdeb)/graphXS) *
-			   (SizeY/2-(2*SizeY/2/100)) + (SizeY/2/100), ((la->suiv->val.x - graphXdeb)/graphXS) *
-			   (SizeX/2-(2*SizeX/2/100)) + (SizeX/2/100),((-la->suiv->val.y - graphYdeb)/graphXS) *
-			   (SizeY/2-(2*SizeY/2/100)) + (SizeY/2/100));
-	
-	la = la->suiv;
-	n = n->suiv;
-      }
     }
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    Maillon *m = l->first;
-    while(m != NULL){
-      rectangle.x = ((m->val.x - graphXdeb)/graphXS) * (SizeX/2-(2*SizeX/2/100)) + (SizeX/2/100)
-	- (SizeX/2/400); rectangle.y = ((-m->val.y - graphYdeb)/graphXS) * (SizeY/2-(2*SizeY/2/100)) +
-		      (SizeY/2/100) - (SizeX/2/400); rectangle.w = 2*SizeX/2/400; rectangle.h = 2*SizeX/2/400;
-      SDL_RenderFillRect(renderer, &rectangle);
-      m = m->suiv;
+    else if (NowTime - LastTick > timeForNewTick)
+    {
+      if (!done)
+      {
+        newt = ResolutionParNewton(*l);
+        lagr = calculLagrange(*l);
+        ViderListe(&pointNewt);
+        done = 1;
+        for (int i = 0; i < nbPoints; i++)
+        {
+          sol = 0;
+          for (int j = 0; j < newt->maxDeg + 1; j++)
+          {
+            sol +=
+                newt->p[j] *
+                pow((float)(graphXdeb + (i * (float)(graphXS) / nbPoints)), j);
+          }
+          ptempo.x = (float)((i * (float)(graphXS) / nbPoints) + graphXdeb);
+          ptempo.y = sol;
+          ajouteFin(&pointNewt, ptempo);
+        }
+
+        ViderListe(&pointLagr);
+        for (int i = 0; i < nbPoints; i++)
+        {
+          sol = 0;
+          for (int j = 0; j < lagr->maxDeg + 1; j++)
+          {
+            sol +=
+                lagr->p[j] *
+                pow((float)(graphXdeb + (i * (float)(graphXS) / nbPoints)), j);
+          }
+          ptempo.x = graphXdeb + (i * (float)(graphXS) / nbPoints);
+          ptempo.y = sol;
+          ajouteFin(&pointLagr, ptempo);
+        }
+
+        SDL_SetRenderTarget(renderer, Graph);
+        // mise du fond en blanc
+        SDL_Rect rectangle;
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        rectangle.x = 0;
+        rectangle.y = 0;
+        rectangle.w = SizeX / 2;
+        rectangle.h = SizeY / 2;
+        SDL_RenderFillRect(renderer, &rectangle);
+
+        // Affichage de l'echelle du graphique
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+        SDL_RenderDrawLine(renderer, (float)(SizeX / 2) / 100,
+                           (SizeY / 2) / 2 + 1, SizeX / 2 - 2 * SizeX / 2 / 200,
+                           (SizeY / 2) / 2);
+        SDL_RenderDrawLine(renderer, (SizeX / 2) / 2, (float)(SizeY / 2) / 100,
+                           (SizeX / 2) / 2, SizeY / 2 - 2 * SizeY / 2 / 200);
+
+        Maillon *n = pointNewt.first;
+        Maillon *la = pointLagr.first;
+
+        if (n != NULL)
+        {
+          while (n->suiv != NULL)
+          {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+            SDL_RenderDrawLine(renderer,
+                               ((n->val.x - graphXdeb) / graphXS) *
+                                       (SizeX / 2 - (2 * SizeX / 2 / 100)) +
+                                   (SizeX / 2 / 100),
+                               ((-n->val.y - graphYdeb) / graphXS) *
+                                       (SizeY / 2 - (2 * SizeY / 2 / 100)) +
+                                   (SizeY / 2 / 100),
+                               ((n->suiv->val.x - graphXdeb) / graphXS) *
+                                       (SizeX / 2 - (2 * SizeX / 2 / 100)) +
+                                   (SizeX / 2 / 100),
+                               ((-n->suiv->val.y - graphYdeb) / graphXS) *
+                                       (SizeY / 2 - (2 * SizeY / 2 / 100)) +
+                                   (SizeY / 2 / 100));
+
+            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+            SDL_RenderDrawLine(renderer,
+                               ((la->val.x - graphXdeb) / graphXS) *
+                                       (SizeX / 2 - (2 * SizeX / 2 / 100)) +
+                                   (SizeX / 2 / 100),
+                               ((-la->val.y - graphYdeb) / graphXS) *
+                                       (SizeY / 2 - (2 * SizeY / 2 / 100)) +
+                                   (SizeY / 2 / 100),
+                               ((la->suiv->val.x - graphXdeb) / graphXS) *
+                                       (SizeX / 2 - (2 * SizeX / 2 / 100)) +
+                                   (SizeX / 2 / 100),
+                               ((-la->suiv->val.y - graphYdeb) / graphXS) *
+                                       (SizeY / 2 - (2 * SizeY / 2 / 100)) +
+                                   (SizeY / 2 / 100));
+
+            la = la->suiv;
+            n = n->suiv;
+          }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        Maillon *m = l->first;
+        while (m != NULL)
+        {
+          rectangle.x = ((m->val.x - graphXdeb) / graphXS) *
+                            (SizeX / 2 - (2 * SizeX / 2 / 100)) +
+                        (SizeX / 2 / 100) - (SizeX / 2 / 400);
+          rectangle.y = ((-m->val.y - graphYdeb) / graphXS) *
+                            (SizeY / 2 - (2 * SizeY / 2 / 100)) +
+                        (SizeY / 2 / 100) - (SizeX / 2 / 400);
+          rectangle.w = 2 * SizeX / 2 / 400;
+          rectangle.h = 2 * SizeX / 2 / 400;
+          SDL_RenderFillRect(renderer, &rectangle);
+          m = m->suiv;
+        }
+
+        SDL_SetRenderTarget(renderer, NULL);
       }
 
-
-    
-
-
-    
-    SDL_SetRenderTarget(renderer, NULL);
-	
-      }
-      
-      
       LastTick += timeForNewTick;
       tickCount++;
-    }else{
+    }
+    else
+    {
       NowTime = getTime();
       long SleepForCPU = 0;
-      if((timeForNewTick - (NowTime-LastFrame)) < (timeForNewTick - (NowTime-LastTick)) && (timeForNewTick - (NowTime-LastFrame)) > 0) {
-	SleepForCPU = (long)(timeForNewFrame - (NowTime-LastFrame))/300;
-      }else if((timeForNewTick - (NowTime-LastTick)) > 0){
-	SleepForCPU = (long)(timeForNewTick - (NowTime-LastTick))/300;
+      if ((timeForNewTick - (NowTime - LastFrame)) <
+              (timeForNewTick - (NowTime - LastTick)) &&
+          (timeForNewTick - (NowTime - LastFrame)) > 0)
+      {
+        SleepForCPU = (long)(timeForNewFrame - (NowTime - LastFrame)) / 300;
+      }
+      else if ((timeForNewTick - (NowTime - LastTick)) > 0)
+      {
+        SleepForCPU = (long)(timeForNewTick - (NowTime - LastTick)) / 300;
       }
       SDL_Delay(SleepForCPU);
-      //printf("on sleep de : %ld\n", SleepForCPU);
-      
-      
+      // printf("on sleep de : %ld\n", SleepForCPU);
     }
-  
 
-    
     /* Gestion des imputs clavier */
-    while(SDL_PollEvent(&event)){
-      switch(event.type){
-      case SDL_KEYDOWN:break;//KeyDown(&event.key);break;
-      case SDL_KEYUP:keyUp(&event.key, &Stape);break;
-      case SDL_MOUSEWHEEL:if(event.wheel.y > 0){graphXS*=2; graphXdeb = -graphXS/2; graphYS*=2; graphYdeb = -graphYS/2;done = 0;} else if(event.wheel.y < 0) {graphXS/=2; graphXdeb = -graphXS/2; graphYS/=2; graphYdeb = -graphYS/2;done = 0;}break;
+    while (SDL_PollEvent(&event))
+    {
+      switch (event.type)
+      {
+      case SDL_KEYDOWN:
+        break; // KeyDown(&event.key);break;
+      case SDL_KEYUP:
+        keyUp(&event.key, &Stape);
+        break;
+      case SDL_MOUSEWHEEL:
+        if (event.wheel.y > 0)
+        {
+          graphXS *= 2;
+          graphXdeb = -graphXS / 2;
+          graphYS *= 2;
+          graphYdeb = -graphYS / 2;
+          done = 0;
+        }
+        else if (event.wheel.y < 0)
+        {
+          graphXS /= 2;
+          graphXdeb = -graphXS / 2;
+          graphYS /= 2;
+          graphYdeb = -graphYS / 2;
+          done = 0;
+        }
+        break;
       case SDL_MOUSEBUTTONDOWN:
-	if(event.button.button == SDL_BUTTON_LEFT){SDL_GetMouseState(&sourisX, &sourisY);if((sourisY >= 0 && sourisY < (7*SizeY/8)) && (sourisX >= 0 && sourisX < (6*SizeX/8))){point p; p.x = ((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb);p.y = -((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb);if(p.x != lx && p.y != ly){ajouteFin(l, p);done = 0;}}}else if(event.button.button == SDL_BUTTON_RIGHT){SDL_GetMouseState(&sourisX, &sourisY); Maillon *m = l->first; float dist = graphXS/20;point p; while(m != NULL){if(sqrt(pow(((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb)-m->val.x, 2) + pow(-((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb)-m->val.y, 2)) < dist){p = m->val; dist = sqrt(pow(((((float)(sourisX-(SizeX/100))/((6*SizeX/8)-(2*SizeX/100)))*(graphXS))+graphXdeb)-m->val.x, 2) + pow(-((((float)(sourisY-(SizeY/100))/((7*SizeY/8)-(2*SizeY/100)))*(graphYS))+graphYdeb)-m->val.y, 2));}m = m->suiv;} if(dist < graphXS/20){supprValeur(l, p); done = 0;}};break;
-      case SDL_QUIT:Stape = 0;break;
-      default:break;
-      }  
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+          SDL_GetMouseState(&sourisX, &sourisY);
+          if ((sourisY >= 0 && sourisY < (7 * SizeY / 8)) &&
+              (sourisX >= 0 && sourisX < (6 * SizeX / 8)))
+          {
+            point p;
+            p.x = ((((float)(sourisX - (SizeX / 100)) /
+                     ((6 * SizeX / 8) - (2 * SizeX / 100))) *
+                    (graphXS)) +
+                   graphXdeb);
+            p.y = -((((float)(sourisY - (SizeY / 100)) /
+                      ((7 * SizeY / 8) - (2 * SizeY / 100))) *
+                     (graphYS)) +
+                    graphYdeb);
+            if (p.x != lx && p.y != ly)
+            {
+              ajouteFin(l, p);
+              done = 0;
+            }
+          }
+        }
+        else if (event.button.button == SDL_BUTTON_RIGHT)
+        {
+          SDL_GetMouseState(&sourisX, &sourisY);
+          Maillon *m = l->first;
+          float dist = graphXS / 20;
+          point p;
+          while (m != NULL)
+          {
+            if (sqrt(pow(((((float)(sourisX - (SizeX / 100)) /
+                            ((6 * SizeX / 8) - (2 * SizeX / 100))) *
+                           (graphXS)) +
+                          graphXdeb) -
+                             m->val.x,
+                         2) +
+                     pow(-((((float)(sourisY - (SizeY / 100)) /
+                             ((7 * SizeY / 8) - (2 * SizeY / 100))) *
+                            (graphYS)) +
+                           graphYdeb) -
+                             m->val.y,
+                         2)) < dist)
+            {
+              p = m->val;
+              dist = sqrt(pow(((((float)(sourisX - (SizeX / 100)) /
+                                 ((6 * SizeX / 8) - (2 * SizeX / 100))) *
+                                (graphXS)) +
+                               graphXdeb) -
+                                  m->val.x,
+                              2) +
+                          pow(-((((float)(sourisY - (SizeY / 100)) /
+                                  ((7 * SizeY / 8) - (2 * SizeY / 100))) *
+                                 (graphYS)) +
+                                graphYdeb) -
+                                  m->val.y,
+                              2));
+            }
+            m = m->suiv;
+          }
+          if (dist < graphXS / 20)
+          {
+            supprValeur(l, p);
+            done = 0;
+          }
+        };
+        break;
+      case SDL_QUIT:
+        Stape = 0;
+        break;
+      default:
+        break;
+      }
     }
 
-
-    
-    
-    if(NowTime > TimeCount){
-      TimeCount+=1000000;
-      //printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
+    if (NowTime > TimeCount)
+    {
+      TimeCount += 1000000;
+      // printf("%d images cette seconde et %d ticks\n", fpsCount, tickCount);
       fpsCount = 0;
       tickCount = 0;
       tmpCount++;
     }
-
-    
   }
 
-    
   /* on referme proprement */
-  end_sdl(1,"Normal ending",renderer, window);
-  
+  end_sdl(1, "Normal ending", renderer, window);
 
   return l;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * \fn void end_sdl(char ok, char const * msg, SDL_Window *window, SDL_Renderer
@@ -320,38 +417,47 @@ void end_sdl(char ok, char const * msg, SDL_Renderer *renderer, SDL_Window *wind
  * \param **renderer l'adresse de laffichage dans la fenêtre
  * \return void
  */
-void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY, SDL_Texture  **Graph){
+void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY,
+                SDL_Texture **Graph)
+{
   SDL_DisplayMode screen_dimension;
 
   /* Initialisation de la SDL  + gestion de l'échec possible */
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) end_sdl(0,"ERROR SDL INIT", *renderer, window);
+  if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    end_sdl(0, "ERROR SDL INIT", *renderer, window);
 
-
+  /* récupère la taille de l'écran, pas utiliser */
   SDL_GetCurrentDisplayMode(0, &screen_dimension);
-    //    printf("Taille de l'écran\n\tw : %d\n\th : %d\n", screen_dimension.w, screen_dimension.h);
+  //    printf("Taille de l'écran\n\tw : %d\n\th : %d\n", screen_dimension.w,
+  //    screen_dimension.h);
 
+  /* Création de la fenêtre, cas avec erreur */
+  window = SDL_CreateWindow("Interpolation", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, screen_dimension.w,
+                            screen_dimension.h, SDL_WINDOW_FULLSCREEN);
+  if (window == NULL)
+    end_sdl(0, "ERROR WINDOW CREATION", *renderer, window);
 
-    /* Création de la fenêtre */
-  window = SDL_CreateWindow("Interpolation",
-                            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                            screen_dimension.w,screen_dimension.h,
-                            SDL_WINDOW_FULLSCREEN);
-  if (window == NULL) end_sdl(0,"ERROR WINDOW CREATION", *renderer, window);
+  /* Création du renderer (le truc dans la windows) */
+  *renderer = SDL_CreateRenderer(
+      window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+  if (*renderer == NULL)
+    end_sdl(0, "ERROR RENDERER CREATION", *renderer, window);
 
-  /* Création du renderer */ 
-  *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-  if (*renderer == NULL) end_sdl(0,"ERROR RENDERER CREATION", *renderer, window);
-
-  if(TTF_Init()==-1) {
+  /* écrire (lettre chiffre) dans le render (polynôme). Grâce à la
+     bibliothèque TTF */
+  if (TTF_Init() == -1)
+  {
     printf("TTF_Init: %s\n", TTF_GetError());
     exit(2);
   }
 
-
+  /* Taille de écran fournit par SDL */
   SDL_GetWindowSize(window, SX, SY);
 
-  *Graph = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, *SX/2, *SY/2);
-
+  /* créer l'image de la moitié de la taille de l'écran */
+  *Graph = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_RGBA8888,
+                             SDL_TEXTUREACCESS_TARGET, *SX / 2, *SY / 2);
 }
 
 /**

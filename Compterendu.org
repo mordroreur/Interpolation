@@ -416,7 +416,7 @@ Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
 
 3. Évaluation des coûts (complexité, efficacité):   
-
+   
    
 * TODO SDL
 
@@ -448,18 +448,57 @@ done savoir si le graph est affiché
 
 SDL_Texture (image)  *Graph; : image du graph
 
+
+Récupérer les évenement (avec event quit)
 #+begin_src C
-  
   
   SDL_Event event;
   SDL_Renderer *renderer = NULL;
+  
+#+end_src
+
+Graph
+#+begin_src C
+  
+  /* début */
+  int graphXdeb = -10;
+  int graphYdeb = -10;
+  
+  
+  /* taille */
+  int graphXS = 20;
+  int graphYS = 20;
+  
 #+end_src
 
 
+Initialisation
+#+begin_src C
+  
+  create_Win(&renderer, window, &SizeX, &SizeY, &Graph);  
+  
+#+end_src
 
-** 
+Taille de écran fournit par SDL
 
-** 
+#+begin_src C
+  
+  SDL_GetWindowSize(window, SX, SY);
+  
+#+end_src
+
+TTF_Font pour choisir la police
+
+#+begin_src C
+  
+  TTF_Font *Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
+  
+#+end_src
+
+
+** Méthod M
+
+** Autres 
 
 * Conclusion sur les méthodes
 
