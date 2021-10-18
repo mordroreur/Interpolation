@@ -8,18 +8,6 @@
 
 #include "lagrange.h"
 
-/**
- * \fn Liste calculLi(int numero,Liste points)
- * \brief Function that find Li to resolve an interpolation with the Lagrange
- * method.
- *
- *
- * \param numero - which is the number i of Li
- * \param points - points is a list of points
- * \param nbMaillon - nbMaillon is the number of the maillon we want to destroy
- * \return *polynome - Because we want Li
- */
-
 float **untableaudepoint(int taille)
 {
   int i, j;
@@ -35,6 +23,17 @@ float **untableaudepoint(int taille)
   return res;
 }
 
+/**
+ * \fn Liste calculLi(int numero,Liste points)
+ * \brief Function that find Li to resolve an interpolation with the Lagrange
+ * method.
+ *
+ *
+ * \param numero - which is the number i of Li
+ * \param points - points is a list of points
+ * \param nbMaillon - nbMaillon is the number of the maillon we want to destroy
+ * \return *polynome - Because we want Li
+ */
 polynome *calculLi(int numero, Liste points)
 {
 
@@ -79,6 +78,16 @@ polynome *calculLi(int numero, Liste points)
   }
   return Li;
 }
+
+/**
+ * \fn Liste calculLagrange(int numero,Liste points)
+ * \brief Function that find "fonction" to return the polynomial with the
+ * Lagrange method.
+ *
+ *
+ * \param points - points is a list of points
+ * \return fonction - It is the polynomial that is the result of calculLagrange
+ */
 
 polynome *calculLagrange(Liste points)
 {

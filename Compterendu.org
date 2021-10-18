@@ -63,24 +63,29 @@ Avec $li$ définie tel que :
 
 ** Méthode de Newton
 
-https://fr.wikipedia.org/wiki/Interpolation_newtonienne#Remarque
 
+Pour la méthode de newton, nous devons appliquer cette formule :
 
 \[   N(x)=\sum _{i=0}^{k}a_{i}n_{i}(x)}\]
 
-Avec les polynômes de Newton définis de la manière
-suivante
+Où $n$ sont les polynômes de Newton définis de la manière
+suivante :
 
 \[ n_{i}(x)=\prod _{0\leq i&lt;i}(x-x_{j})\qquad j=0,\ldots ,k  \]
 
+et $a_i$ définit tel que
 
-Conclusion :
+\[ a_i = [y_0,..., y_i]  \]
+
+Conclusion : Nous devons effectuer cette formule :
 
 \[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{k}](x-x_{0})\ldots (x-x_{k-1}).}  \]
 
 * Présentation des programmes commentés
 
 Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables [[file:lagrange.c][ici pour la méthode de Lagrange]], ainsi qu'[[file:newton.c][ici pour la méthode Newton]].
+
+
 
 ** Nos structures
 
@@ -217,9 +222,6 @@ Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux é
 1. D'abord, calculer Li, avec une fonction /calculLi/
 2. Puis, grâce à la fonction /calculLi/ que l'on appelle dans la fonction /calculLagrange/, on renvoie le polynôme correspondant à l'interpolation.
 
-
-
-
 *** Présentation de la fonction /calculLi/
 
 Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  $i\in [0, 1, ... , k]$.
@@ -291,41 +293,204 @@ En effet, pour compléter la méthode de Lagrange, il faut faire une boucle /for
 
 Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou bien même l'utiliser dans SDL.
 
-** Présentation de la méthode de Newton
+** TODO Présentation de la méthode de Newton
 
 
 
 
-* Présentation des Jeux d'essais (avec graphique)
 
+Pour la velléité par Newton, nous commençons tout d'abord par initialiser un tableau de la taille adéquate pour nous permettre de stocker les différences divisées.
+
+#+begin_src C
+  
+  long double **triangle = (long double **)malloc(sizeof(long double *) * (pointNB));
+  for(int i = 0; i < pointNB; i++){
+    triangle[i] = (long double *)malloc(sizeof(long double) * (pointNB-i));
+  }
+
+  
+#+end_src
+
+Puis, on remplit la première colonne avec les ordonnées des points.
+
+#+begin_src C
+for(int i = 0; i < pointNB; i++)  
+  {
+    triangle[0][i] = Points[1][i];
+  }
+  
+#+end_src
+
+Après, nous pouvons effectué le calcul des différences divisées en appliquant la formule du cours
+
+#+begin_src C
+  
+  for(int i = 1; i < pointNB; i++){
+    for(int j = 0; j < pointNB-i; j++){
+      triangle[i][j] = (triangle[i-1][j+1] - triangle[i-1][0]) / (Points[0][i+j] - Points[0][i-1]);
+    }
+   }
+  
+#+end_src
+
+Subséquemment, si le polynôme renvoie null, alors nous 
+#+begin_src C
+  
+  if(pointNB != 0){
+    Solution->p[0] = triangle[pointNB-1][0];
+  }
+  
+#+end_src
+
+
+Enfin, nous pouvons passer à la résolution résolution finale, qui elle aussi est issue du cours
+#+begin_src C
+  
+  for(int i = 0; i < pointNB-1; i++){
+    /* créer le polynome "constant" */
+    tmp = creePolynome(2);
+    tmp->p[1] = 1;
+  
+    /* résolution de la méthode */
+    tmp->p[0] = -Points[0][pointNB - 2 - i];
+    Solution = multPolynome(Solution, tmp);
+    Solution->p[0] += triangle[pointNB-i-2][0];
+  }
+  Solution = AdaptePoly(Solution);
+  
+#+end_src
+
+Enfin, nous retournons le polynôme obtenu pour pouvoir l'afficher  dans le terminal, où sous une courbe avec SDL.
+
+* Présentation des Jeux d'essais avec commentaires
+
+Les différents résultats complet sont disponibles en annexe [[*Jeux de Test][ici]].
+
+
+** Densité de l'eau en fonction de la température de l'air :
+
+Liste de points avec une précision de l'ordre de 10^-5.
+Difficultés potentielles : précisions.
+
+
+
+Résultats : Les deux polynômes sont les mêmes et les calculs sont les bons.
+
+
+
+** Les trois séries :
+
+Suites de points normaux.
+Difficultés potentielles : aucune, sauf pour le dernier qui ne pourra sûrement pas être calculé (car ce n'est pas une suite de points avec différents $x$)
+
+
+Résultats : 
+
+  1. Le polynôme est le bon, aucune difficulté
+
+  2. Le polynôme est le bon, mais des erreurs d'approximations sont présentes. Les polynômes ne sont pas exactement les mêmes.
+
+  3. Ne peut pas se calculer : en effet, les points sont sur le même X. L'interpolation est donc incalculable (et infaisable).
+
+
+** Dépenses mensuelles et revenus :
+
+Pour ces données, il y a un grand nombre de données, ainsi qu'un axe des x qui commence avec de "grandes valeurs".
+
+Difficultés potentielles : précisions dû aux résultats importants obtenus.
+
+
+Résultats :Les polynômes ont soit des coefficients très importants, soit des coefficients presque négligeable. En revanche, on peut constater qu'il y a des approximations de calcul dans les deux méthodes. En effet, les deux polynômes finaux ne sont pas exactement les mêmes, même si ils sont tous les deux du même ordre de grandeur.
+
+
+** Commentaire global
 
 Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
+1. L'unicité du polynôme obtenu
 
-* Commentaires des jeux d'essais
+   En effet, ce dernier est souvent le même pour les deux méthodes. Évidemment, des erreurs de calculs sont présentes.
+   
+2. Influence de la modification d'un ou plusieurs points donnés sur le polynôme
+   Lorsque l'on donne des points aléatoires au fur et à mesure grâce à l'implémentation de notre méthode "placer un point" pour mettre un point, on peut voir que les deux polynômes s'adaptent bien.
 
-1. unicité du polynôme obtenu
-2. adéquation du polynôme aux jeux d'essais
-3. influence de la modification d'un ou plusieurs points donnés sur le poly
-4. évaluation des coûts (complexité, efficacité)
+
+3. Évaluation des coûts (complexité, efficacité):   
+
+   
+* TODO SDL
+
+** Début
+Initialsisation des variables
+Stape : sort du jeu si 0
+size : taille de l'écran
+
+Les deux poly
+
+pour le 60 fps
+#+begin_src C
+  
+  long int LastFrame;
+  long int TimeCount;
+  long int NowTime;
+  long int timeForNewFrame = 1000000/FPS_TO_GET;
+  
+  int fpsCount = 0;
+
+  long int LastTick;
+  long int timeForNewTick = 1000000/TICK_TO_GET;
+  
+  int tickCount = 0;
+  
+#+end_src
+souris lieu de la soris
+done savoir si le graph est affiché
+
+SDL_Texture (image)  *Graph; : image du graph
+
+#+begin_src C
+  
+  
+  SDL_Event event;
+  SDL_Renderer *renderer = NULL;
+#+end_src
+
+
+
+** 
+
+** 
 
 * Conclusion sur les méthodes
 
 
 https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees
 
-Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat. En effet, 
+Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
 
-
-Il existe une fonction sur scilab mdrr
-Scilab : calcul de polynome d’interpolation de Newton
-
-La fonction Scilab newton.sci permet de déterminer le polynome d’interpolation de Newton. X
-contient les points d’interpolations et Y les valeurs d’interpolation, P
-
-
-est le polynome d’interpolation de Newton calculé à l’aide des différences divisées.
+En revanche, nous pourrions sûrement améliorer notre programme pour Newton : en effet, d'après la définition des différences divisées, lorsque l'on ajoute de nouveaux points, nous ne sommes pas obligés de recalculer l'ensemble des coefficients du polynôme.
 
 
 
 
+
+* Annexes
+
+** TODO Jeux de Test
+
+*** Densité de l'eau
+
+Les résultats obtenus pour Newton sont :
+
+  1.00 +  -0.94*x^(1)  +   1.62*x^(2)  +  -1.21*x^(3)  +   0.53*x^(4)  +  -0.15*x^(5)  +   0.03*x^(6)  +  -0.00*x^(7)  +   0.00*x^(8)  +  -0.00*x^(9)  +   0.00*x^(10)  +  -0.00*x^(11)  +   0.00*x^(12)  +  -0.00*x^(13)  +   0.00*x^(14)  +  -0.00*x^(15)  +   0.00*x^(16)  +  -0.00*x^(17)  +   0.00*x^(18)  +  -0.00*x^(19)
+  
+Les résultats obtenus pour Lagrange sont :
+
+  1.00 +  -0.94*x^(1)  +   1.62*x^(2)  +  -1.21*x^(3)  +   0.53*x^(4)  +  -0.15*x^(5)  +   0.03*x^(6)  +  -0.00*x^(7)  +   0.00*x^(8)  +  -0.00*x^(9)  +   0.00*x^(10)  +  -0.00*x^(11)  +   0.00*x^(12)  +  -0.00*x^(13)  +   0.00*x^(14)  +  -0.00*x^(15)  +   0.00*x^(16)  +  -0.00*x^(17)  +   0.00*x^(18)  +  -0.00*x^(19)  +   0.00*x^(20) 
+  
+*** S1
+
+
+*** S2
+*** S3
+*** Dépenses mensuelle et revenu
