@@ -52,9 +52,9 @@ int main()
     case 'g':RenderingInterpolation(&listePoints);break;
     case 'f':casAutoFill(&listePoints);break;
     case 'n':Solution = ResolutionParNewton(listePoints); affichepolynome(Solution);break;
-    case 'm':Solution = ResolutionParNewton(listePoints); affichepolynomePrecis(Solution);break;
+    case 'm':Solution = ResolutionParNewton(listePoints); affichepolynomePrecis(Solution, listePoints);break;
     case 'l':Solution = calculLagrange(listePoints); affichepolynome(Solution);break;
-    case 'k':Solution = calculLagrange(listePoints); affichepolynomePrecis(Solution);break;
+    case 'k':Solution = calculLagrange(listePoints); affichepolynomePrecis(Solution, listePoints);break;
     case 'r':casRemplir(&listePoints);break;
     case 'a':afficheListePoints(listePoints);break;
     case 'q':printf("Au revoir!\n");break;
@@ -163,7 +163,6 @@ void casRemplir(Liste *l){
       if(s[curseur] == ',' || s[curseur] == '.'){
 	s[curseur] = '.';
       }else if(!isdigit(s[curseur])  && s[curseur] != '-'){
-	printf("%c\n", s[curseur]);
 	quit = 1;
 	break;
       }

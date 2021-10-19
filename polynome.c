@@ -81,6 +81,7 @@ void affichepolynomePrecis(polynome *p, Liste l)
   printf("\nLa moyenne d'incertitude est de : %f.\n", precision(p, l));
 }
 
+
 double precision(polynome *p, Liste l){
   int n = ListLenght(l);
   Maillon *m = l.first;

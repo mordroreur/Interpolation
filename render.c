@@ -2,6 +2,7 @@
 #include "lagrange.h"
 #include "listePoint.h"
 #include "polynome.h"
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_render.h>
 #include <math.h>
@@ -446,7 +447,7 @@ long int getTime(){
  * \return void
  */
 void keyUp(SDL_KeyboardEvent *key, int *Stape){
-  //printf("%d\n", key->keysym.sym);
+  //printf("%c\n", key->keysym.sym);
   switch(key->keysym.sym){
   case SDLK_ESCAPE:*Stape = 0;break;
     // case SDLK_SPACE:if(Stape == 5){Stape = 15;}else if(Stape == 15){Stape = 5;}break;
