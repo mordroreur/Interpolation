@@ -71,7 +71,7 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape);
  * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut redessiner
  * \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin, SDL_Texture  *Graph);
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin, SDL_Texture  *Graph, char *StringX, char *StringY, int pointeurWriteEmp);
 
 
 

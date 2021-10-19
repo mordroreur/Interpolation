@@ -6,6 +6,7 @@
  * \date 8 Octobre 2021
  */
 #include "polynome.h"
+#include "listePoint.h"
 
 polynome *creePolynome(int maxDeg)
 {
@@ -62,6 +63,38 @@ void affichepolynome(polynome *p)
   }
   printf("\n");
 }
+
+void affichepolynomePrecis(polynome *p, Liste l)
+{
+  int i;
+  for (i = 0; i < p->maxDeg + 1; ++i)
+  {
+    if (i != 0)
+    {
+      printf("+ %30.25f*x^(%d)\n", p->p[i], i);
+    }
+    else
+    { 
+      printf("%30.25f\n", p->p[i]);
+    }
+  }
+  printf("\nLa moyenne d'incertitude est de : %f.\n", precision(p, l));
+}
+
+double precision(polynome *p, Liste l){
+  int n = ListLenght(l);
+  Maillon *m = l.first;
+  float somme = 0;
+  for(int i = 0; i < n; i++){
+    float res = 0;
+    for(int j = 0; j < p->maxDeg; j++){
+      res += p->p[j] * pow(m->val.x, j);
+    }
+    somme+= fabsf(m->val.y - res);
+  }
+  return somme/n;
+}
+
 
 polynome *addPolynome(polynome *p1, polynome *p2)
 {

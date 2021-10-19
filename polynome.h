@@ -12,6 +12,7 @@
 #include "listePoint.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct Polynome{
   float *p;
@@ -22,6 +23,8 @@ polynome *creePolynome(int maxDeg);
 polynome *creePolynomedemande();
 void destroyPolynome(polynome *p);
 void affichepolynome(polynome *p);
+void affichepolynomePrecis(polynome *p, Liste l);
+double precision(polynome *p, Liste l);
 polynome *transformefloatenpoly(float unfloat);
 polynome *addPolynome(polynome *p1, polynome *p2);
 polynome *multPolynome(polynome *p1, polynome *p2);
