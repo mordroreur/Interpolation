@@ -75,9 +75,26 @@ suivante :
 
 \[ n_{i}(x)=\prod _{0\leq j < i}(x-x_{j})\qquad i=0,\ldots ,n  \]
 
-et $a_i$ définit tel que
+et $a_i$ les différences divisées définit tel que
 
-\[ a_i = [y_0,..., y_i]  \]
+
+
+
+#+begin_export latex
+\begin{align*}
+a_0 &= y_1 \\
+    a_1 &= \frac{y_2 - y_1}{x_2 - x_1}\\
+    ...\\
+    a_k &= \nabla^{k}y_{k+1}\\
+    ...\\
+    a_{n-1} &= \nabla^{n-1}y_{n}
+\end{align*}
+#+end_export
+
+#+begin_center
+Avec pour $j > i$ ,$\nabla^k y_j = \frac{\nabla^{k-1} y_j - \nabla^{k-1}y_{k}}{x_j - x_{k}}$
+#+end_center
+
 
 Conclusion : Nous devons effectuer cette formule :
 

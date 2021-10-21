@@ -1,4 +1,4 @@
-% Created 2021-10-21 jeu. 10:10
+% Created 2021-10-21 Thu 10:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[letter]{article}
                       \usepackage[utf8]{inputenc}
@@ -38,11 +38,11 @@
 \newpage
 
 \section{Rappel rapide des méthodes}
-\label{sec:orge5d2524}
+\label{sec:orgbc773b3}
 
 
 \subsection{Cas général des méthodes}
-\label{sec:org743bc73}
+\label{sec:orgb5cb4c1}
 
 Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points \(n+1\) de la forme :
 
@@ -53,7 +53,7 @@ Pour les deux méthodes, le but est le même, trouver une équation avec un nomb
 
 
 \subsection{Méthode de Lagrange}
-\label{sec:org5bdfb9d}
+\label{sec:org58f922d}
 
 
 
@@ -73,7 +73,7 @@ Avec \(li\) définie tel que :
 
 
 \subsection{Méthode de Newton}
-\label{sec:org10362c3}
+\label{sec:org7593288}
 
 
 Pour la méthode de newton, nous devons appliquer cette formule :
@@ -85,21 +85,36 @@ suivante :
 
 \[ n_{i}(x)=\prod _{0\leq j < i}(x-x_{j})\qquad i=0,\ldots ,n  \]
 
-et \(a_i\) définit tel que
+et \(a_i\) les différences divisées définit tel que
 
-\[ a_i = [y_0,..., y_i]  \]
+
+
+
+\begin{align*}
+a_0 &= y_1 \\
+    a_1 &= \frac{y_2 - y_1}{x_2 - x_1}\\
+    ...\\
+    a_k &= \nabla^{k}y_{k+1}\\
+    ...\\
+    a_{n-1} &= \nabla^{n-1}y_{n}
+\end{align*}
+
+\begin{center}
+Avec pour \(j > i\) ,\(\nabla^k y_j = \frac{\nabla^{k-1} y_j - \nabla^{k-1}y_{k}}{x_j - x_{k}}\)
+\end{center}
+
 
 Conclusion : Nous devons effectuer cette formule :
 
 \[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{n}](x-x_{0})\ldots (x-x_{n}).}  \]
 
 \section{Présentation des programmes commentés}
-\label{sec:org9ac841e}
+\label{sec:org039f74a}
 
 Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables \href{lagrange.c}{ici pour la méthode de Lagrange}, ainsi qu'\href{newton.c}{ici pour la méthode Newton}.
 
 \subsection{Nos structures}
-\label{sec:org62f93b0}
+\label{sec:org297810d}
 
 Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
 \begin{enumerate}
@@ -111,7 +126,7 @@ Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
 \end{enumerate}
 
 \subsubsection{Listes/Points}
-\label{sec:orgebb44d0}
+\label{sec:org07c17e7}
 
 Le code pour les listes ainsi que pour les points est trouvable \href{listePoint.c}{ici}.
 
@@ -163,7 +178,7 @@ De plus, les fonctions usuelles des listes sont également créé :
 
 
 \subsubsection{Polynômes}
-\label{sec:org4ed6f4b}
+\label{sec:orgdc6f25c}
 
 Le code pour les polynôme est trouvable \href{polynome.c}{ici}. 
 
@@ -237,7 +252,7 @@ return poly;
 
 
 \subsection{Présentation de la méthode de Lagrange}
-\label{sec:org4b91b4f}
+\label{sec:org2c7380b}
 
 Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux étapes : 
 \begin{enumerate}
@@ -246,7 +261,7 @@ Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux é
 \end{enumerate}
 
 \subsubsection{Présentation de la fonction \emph{calculLi}}
-\label{sec:org940a313}
+\label{sec:org61ea95d}
 
 Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  \(i\in [0, 1, ... , k]\).
 Les deux principales difficultés sont les suivantes :
@@ -288,10 +303,10 @@ return Li;
 \end{verbatim}
 
 \subsubsection{Présentation de la fonction \emph{calculLagrange}}
-\label{sec:org523f010}
+\label{sec:org2ccb0b4}
 
-Cette fonction permet de faire la somme des différents Li trouvé dans la fonction \hyperref[sec:org940a313]{\emph{calculLi}}.
-En effet, pour compléter la méthode de Lagrange, il faut faire une boucle \emph{for} qui fait une somme des \(y_i\) multiplier par \hyperref[sec:org940a313]{\emph{calculLi}} pour l'itération \(i\).
+Cette fonction permet de faire la somme des différents Li trouvé dans la fonction \hyperref[sec:org61ea95d]{\emph{calculLi}}.
+En effet, pour compléter la méthode de Lagrange, il faut faire une boucle \emph{for} qui fait une somme des \(y_i\) multiplier par \hyperref[sec:org61ea95d]{\emph{calculLi}} pour l'itération \(i\).
 
 \begin{verbatim}
 
@@ -321,7 +336,7 @@ return fonction;
 Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou bien même l'utiliser dans SDL.
 
 \subsection{Présentation de la méthode de Newton}
-\label{sec:orgaa5a7e4}
+\label{sec:org7240db2}
 
 
 Le code pour l'interpolation newtonienne est disponible \href{newton.c}{ici.}
@@ -382,13 +397,13 @@ Solution = AdaptePoly(Solution);
 Il ne nous reste plus qu'à retourner le polynôme obtenu pour pouvoir l'afficher  dans le terminal, où sous une courbe avec SDL.
 
 \section{Présentation des Jeux d'essais avec commentaires}
-\label{sec:orgaf0564a}
+\label{sec:orgd88060d}
 
 Les différents résultats sont disponibles en faisant les test grâces au fonctionnalité implémenter dans le programme.
 
 
 \subsection{Densité de l'eau en fonction de la température de l'air :}
-\label{sec:orge3d46ee}
+\label{sec:org60aac31}
 
 Liste de points avec une précision de l'ordre de 10\textsuperscript{-5}.
 Difficultés potentielles : précisions.
@@ -400,7 +415,7 @@ Résultats : Les deux polynômes sont les mêmes et les calculs sont les bons.
 
 
 \subsection{Les trois séries :}
-\label{sec:org166bc04}
+\label{sec:org2edbc9c}
 
 Suites de points normaux.
 Difficultés potentielles : aucune, sauf pour le dernier qui ne pourra sûrement pas être calculé (car ce n'est pas une suite de points avec différents \(x\))
@@ -418,7 +433,7 @@ Résultats :
 
 
 \subsection{Dépenses mensuelles et revenus :}
-\label{sec:orgd4af63f}
+\label{sec:orge9717da}
 
 Pour ces données, il y a un grand nombre de données, ainsi qu'un axe des x qui commence avec de "grandes valeurs".
 
@@ -429,7 +444,7 @@ Résultats :Les polynômes ont soit des coefficients très importants, soit des 
 
 
 \subsection{Commentaire global}
-\label{sec:org2e8eac3}
+\label{sec:org686294b}
 
 Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
@@ -448,12 +463,12 @@ Vous pouvez, grâce au programme, afficher les polynômes avec une grande ou une
 
 \newpage
 \section{SDL}
-\label{sec:org0b99c45}
+\label{sec:orge1db78a}
 
 Le code qui nous permet de gérer la fenêtre SDL est disponible \href{render.c}{ici}.
 
 \subsection{Début}
-\label{sec:org0e5987c}
+\label{sec:orgfbd5f66}
 
 Pour démarrer SDL, nous devons initialiser de nombreuses variables, comme par exemple :
 
@@ -470,10 +485,10 @@ Pour démarrer SDL, nous devons initialiser de nombreuses variables, comme par e
 
 
 \subsection{Affichage et fonctionnalité}
-\label{sec:orgac376bb}
+\label{sec:org0588872}
 
 \subsubsection{Affichage}
-\label{sec:orgd685c4a}
+\label{sec:orgb6213f4}
 
 Pour effectuer l'affichage d'une fenêtre SDL, nous devons passer par une boucle \emph{while}.
 
@@ -495,7 +510,7 @@ Puis, nous avons aussi un cas de débogage. En effet, si l'on n'est pas entré d
 
 
 \subsubsection{Fonctionnalités :}
-\label{sec:org168b791}
+\label{sec:org2a31e8a}
 
 Divers fonctionnalités sont présentes :
 Vous pouvez afficher la fenêtre grâce à la touche "g". Vous pouvez désormais voir la liste des points, les courbes représentant l'interpolation lagrangienne et newtonienne, ainsi que la liste de points à droite.
@@ -508,17 +523,17 @@ Le curseur aura alors une position (x et y) qui sera automatiquement ajouté dan
 Enfin, vous pouvez zoomer et dézoomer grâce à la molette de la souris.
 
 \subsubsection{{\bfseries\sffamily TODO} Amélioration}
-\label{sec:org2adced7}
+\label{sec:org675f11b}
 
 Ce que t'a pas eu le temps de faire
 
 \subsection{Fin de SDL}
-\label{sec:org1ef5197}
+\label{sec:org1719144}
 
 La fonction \emph{end-sdl} nous permet de fermet la fenêtre SDL proprement, ainsi que faire les opérations nécessaires pour vider la mémoire qui a besoin d'être libéré.
 
 \section{Conclusion sur les méthodes}
-\label{sec:org8caf77c}
+\label{sec:org17e5e10}
 
 Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
 
