@@ -1,13 +1,6 @@
 * Readme
-** Newton
-** Lagrange
 
-1. input "nombre de points",
-2. première boucle de 0 à nbpoint, stocker les valeurs dans une structure point (abs, ordonnée)
-3. 
-4. rentrer les valeurs des jeux de données
-
-* Librairy nécessaire à la compilation :
+** Librairy nécessaire à la compilation :
 
 SDL2 :
 
@@ -19,3 +12,10 @@ SDL2_ttf :
 
 libsdl2-ttf-dev
 
+
+
+** Pour obtenir un Doxygen :
+
+Il suffit de faire la commande /make doxy/, puis d'ouvrir le fichier *htlm/index.html*.
+
+Pour plus d'info, aller voir le compte rendu.

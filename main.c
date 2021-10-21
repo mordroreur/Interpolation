@@ -8,13 +8,13 @@
  *
  */
 
-
 /*!
   \mainpage Programme d'interpolation
-  \section Introduction
-  \subsection sous-titre
-  Je ne sais pas encore ce que fais ce programme...
-  \n Donc je peu pas vous dire...
+  \section Explication
+  Ce programme applique l'interpolation de Newton et de
+  Lagrange sur une liste de point. Il permet donc de trouver le
+  polynôme passant par les points de la liste.
+
  */
 #include "main.h"
 #include "listePoint.h"
@@ -31,12 +31,11 @@ int main()
 {
   //  srand(time(NULL)); // in case we need random
 
-
   polynome *Solution;
   Liste listePoints = creerListe();
-  
+
   char choix = 'A';
-  
+
   printf("Bonjours et bienvenue dans ce programme d'interpolation.\n");
   printf("Pour voire l'aide utiliser la lettre h.\n");
   while (choix != 'q')
@@ -47,17 +46,46 @@ int main()
     switch (choix)
     {
     case 'h':
-      printf("    h : Afficher cette aide.\n    g : Ouvre une fenêtre graphique.\n    f : Remplir automatiquement.\n    n : Applique l'interpolation de Newton.\n    l : applique l'interpolation de lagrange.\n    m : Applique l'interpolation de Newton avec un affichage précis.\n    l : applique l'interpolation de lagrange avec un affichage précis.\n    r : Permet de remplir des points.\n    a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
+      printf(
+          "    h : Afficher cette aide.\n    g : Ouvre une fenêtre "
+          "graphique.\n    f : Remplir automatiquement.\n    n : Applique "
+          "l'interpolation de Newton.\n    l : applique l'interpolation de "
+          "lagrange.\n    m : Applique l'interpolation de Newton avec un "
+          "affichage précis.\n    l : applique l'interpolation de lagrange "
+          "avec un affichage précis.\n    r : Permet de remplir des points.\n  "
+          "  a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
       break;
-    case 'g':RenderingInterpolation(&listePoints);break;
-    case 'f':casAutoFill(&listePoints);break;
-    case 'n':Solution = ResolutionParNewton(listePoints); affichepolynome(Solution);break;
-    case 'm':Solution = ResolutionParNewton(listePoints); affichepolynomePrecis(Solution, listePoints);break;
-    case 'l':Solution = calculLagrange(listePoints); affichepolynome(Solution);break;
-    case 'k':Solution = calculLagrange(listePoints); affichepolynomePrecis(Solution, listePoints);break;
-    case 'r':casRemplir(&listePoints);break;
-    case 'a':afficheListePoints(listePoints);break;
-    case 'q':printf("Au revoir!\n");break;
+    case 'g':
+      RenderingInterpolation(&listePoints);
+      break;
+    case 'f':
+      casAutoFill(&listePoints);
+      break;
+    case 'n':
+      Solution = ResolutionParNewton(listePoints);
+      affichepolynome(Solution);
+      break;
+    case 'm':
+      Solution = ResolutionParNewton(listePoints);
+      affichepolynomePrecis(Solution, listePoints);
+      break;
+    case 'l':
+      Solution = calculLagrange(listePoints);
+      affichepolynome(Solution);
+      break;
+    case 'k':
+      Solution = calculLagrange(listePoints);
+      affichepolynomePrecis(Solution, listePoints);
+      break;
+    case 'r':
+      casRemplir(&listePoints);
+      break;
+    case 'a':
+      afficheListePoints(listePoints);
+      break;
+    case 'q':
+      printf("Au revoir!\n");
+      break;
     default:
       printf("Toutes les lettres a rentrés sont "
              "en minuscule. Utiliser h pour savoir quels sont vos choix.\n\n");
@@ -65,10 +93,6 @@ int main()
       break;
     }
   }
-
-
-
-  
 
   /* polynome *p1 = creePolynomedemande(); */
   /* polynome *p2 = creePolynome(0); */
@@ -113,7 +137,6 @@ int main()
 
 
    points = ListeToTabsPoints(l); */
-
 
   /* for (int i = 0; i < 4; i++) */
   /* { */
