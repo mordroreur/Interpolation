@@ -1,4 +1,4 @@
-% Created 2021-10-18 Mon 12:03
+% Created 2021-10-21 jeu. 10:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[letter]{article}
                       \usepackage[utf8]{inputenc}
@@ -35,24 +35,25 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 
+\newpage
+
 \section{Rappel rapide des méthodes}
-\label{sec:org151765e}
+\label{sec:orge5d2524}
 
 
 \subsection{Cas général des méthodes}
-\label{sec:orgf4c8d9c}
+\label{sec:org743bc73}
 
-Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points \(k+1\) de la forme :
+Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points \(n+1\) de la forme :
 
 
 \[ P(x)= a_0 + a_1x + a_2x^2 + … + a_nx^n  \]
 
-Où l'on a \(n \in [0, 1, ...k]\).
 
 
 
 \subsection{Méthode de Lagrange}
-\label{sec:orgae2ed92}
+\label{sec:org5bdfb9d}
 
 
 
@@ -72,32 +73,33 @@ Avec \(li\) définie tel que :
 
 
 \subsection{Méthode de Newton}
-\label{sec:orgae48f4b}
+\label{sec:org10362c3}
 
-\url{https://fr.wikipedia.org/wiki/Interpolation\_newtonienne\#Remarque}
 
+Pour la méthode de newton, nous devons appliquer cette formule :
 
 \[   N(x)=\sum _{i=0}^{k}a_{i}n_{i}(x)}\]
 
-Avec les polynômes de Newton définis de la manière
-suivante
+Où \(n\) sont les polynômes de Newton définis de la manière
+suivante :
 
-\[ n_{i}(x)=\prod _{0\leq i&lt;i}(x-x_{j})\qquad j=0,\ldots ,k  \]
+\[ n_{i}(x)=\prod _{0\leq j < i}(x-x_{j})\qquad i=0,\ldots ,n  \]
 
+et \(a_i\) définit tel que
 
-Conclusion :
+\[ a_i = [y_0,..., y_i]  \]
 
-\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{k}](x-x_{0})\ldots (x-x_{k-1}).}  \]
+Conclusion : Nous devons effectuer cette formule :
+
+\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{n}](x-x_{0})\ldots (x-x_{n}).}  \]
 
 \section{Présentation des programmes commentés}
-\label{sec:org4f57a23}
+\label{sec:org9ac841e}
 
 Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables \href{lagrange.c}{ici pour la méthode de Lagrange}, ainsi qu'\href{newton.c}{ici pour la méthode Newton}.
 
-
-
 \subsection{Nos structures}
-\label{sec:org287239f}
+\label{sec:org62f93b0}
 
 Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
 \begin{enumerate}
@@ -109,7 +111,7 @@ Nous avons choisis d'utiliser plusieurs structures pour plusieurs cas :
 \end{enumerate}
 
 \subsubsection{Listes/Points}
-\label{sec:org0f555f7}
+\label{sec:orgebb44d0}
 
 Le code pour les listes ainsi que pour les points est trouvable \href{listePoint.c}{ici}.
 
@@ -126,7 +128,7 @@ typedef struct point
 
 \end{verbatim}
 
-Puis, nous voulons rassembler ses points en des TODO, nous avons donc besoin de deux structures supplémentaires : la structure \emph{Maillon} et la struture \emph{Liste}. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
+Puis, nous voulons rassembler ses points en des listes, nous avons donc besoin de deux structures supplémentaires : la structure \emph{Maillon} et la struture \emph{Liste}. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
 
 \begin{verbatim}
 
@@ -161,7 +163,7 @@ De plus, les fonctions usuelles des listes sont également créé :
 
 
 \subsubsection{Polynômes}
-\label{sec:org084af76}
+\label{sec:org4ed6f4b}
 
 Le code pour les polynôme est trouvable \href{polynome.c}{ici}. 
 
@@ -235,7 +237,7 @@ return poly;
 
 
 \subsection{Présentation de la méthode de Lagrange}
-\label{sec:org49e1174}
+\label{sec:org4b91b4f}
 
 Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux étapes : 
 \begin{enumerate}
@@ -244,7 +246,7 @@ Pour aborder ce problème, nous avons décidé d'aborder ce problème en deux é
 \end{enumerate}
 
 \subsubsection{Présentation de la fonction \emph{calculLi}}
-\label{sec:orga976c24}
+\label{sec:org940a313}
 
 Suite à l'initialisation des variables nécessaires, cette fonction permet le calcul de Li, avec  \(i\in [0, 1, ... , k]\).
 Les deux principales difficultés sont les suivantes :
@@ -286,10 +288,10 @@ return Li;
 \end{verbatim}
 
 \subsubsection{Présentation de la fonction \emph{calculLagrange}}
-\label{sec:org2b37126}
+\label{sec:org523f010}
 
-Cette fonction permet de faire la somme des différents Li trouvé dans la fonction \hyperref[sec:orga976c24]{\emph{calculLi}}.
-En effet, pour compléter la méthode de Lagrange, il faut faire une boucle \emph{for} qui fait une somme des \(y_i\) multiplier par \hyperref[sec:orga976c24]{\emph{calculLi}} pour l'itération \(i\).
+Cette fonction permet de faire la somme des différents Li trouvé dans la fonction \hyperref[sec:org940a313]{\emph{calculLi}}.
+En effet, pour compléter la méthode de Lagrange, il faut faire une boucle \emph{for} qui fait une somme des \(y_i\) multiplier par \hyperref[sec:org940a313]{\emph{calculLi}} pour l'itération \(i\).
 
 \begin{verbatim}
 
@@ -318,14 +320,14 @@ return fonction;
 
 Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou bien même l'utiliser dans SDL.
 
-\subsection{{\bfseries\sffamily TODO} Présentation de la méthode de Newton}
-\label{sec:orgdefabdd}
+\subsection{Présentation de la méthode de Newton}
+\label{sec:orgaa5a7e4}
 
 
+Le code pour l'interpolation newtonienne est disponible \href{newton.c}{ici.}
 
 
-
-Pour la velléité par Newton, nous commençons tout d'abord par initialiser un tableau de la taille adéquate pour nous permettre de stocker les différences divisées.
+Pour la résolution par Newton, nous commençons tout d'abord par initialiser un tableau de la taille adéquate pour nous permettre de stocker les différences divisées.
 
 \begin{verbatim}
 
@@ -337,7 +339,7 @@ for(int i = 0; i < pointNB; i++){
 
 \end{verbatim}
 
-Puis, on remplit la première colonne avec les ordonnées des points.
+Puis, nous remplissons la première colonne avec les ordonnées des points.
 
 \begin{verbatim}
 for(int i = 0; i < pointNB; i++)  
@@ -347,7 +349,7 @@ for(int i = 0; i < pointNB; i++)
 
 \end{verbatim}
 
-Subséquemment, nous pouvons effectué le calcul des différences divisées en appliquant la formule du cours
+Subséquemment, nous pouvons effectuer le calcul des différences divisées en appliquant la formule du cours
 
 \begin{verbatim}
 
@@ -359,21 +361,12 @@ for(int i = 1; i < pointNB; i++){
 
 \end{verbatim}
 
-Après, si le polynôme renvoie null
-\begin{verbatim}
 
-if(pointNB != 0){
-  Solution->p[0] = triangle[pointNB-1][0];
-}
-
-\end{verbatim}
-
-
-Enfin, résolution finale
+Enfin, nous pouvons passer à la résolution résolution finale, qui elle aussi est issue du cours.
 \begin{verbatim}
 
 for(int i = 0; i < pointNB-1; i++){
-  /* créer le polynome constant */
+  /* créer le polynome "constant" */
   tmp = creePolynome(2);
   tmp->p[1] = 1;
 
@@ -386,16 +379,16 @@ Solution = AdaptePoly(Solution);
 
 \end{verbatim}
 
-Enfin, on retourne le polynôme obtenue
+Il ne nous reste plus qu'à retourner le polynôme obtenu pour pouvoir l'afficher  dans le terminal, où sous une courbe avec SDL.
 
 \section{Présentation des Jeux d'essais avec commentaires}
-\label{sec:org8001bfe}
+\label{sec:orgaf0564a}
 
-Les différents résultats complet sont disponibles en annexe \hyperref[sec:org01371bb]{ici}.
+Les différents résultats sont disponibles en faisant les test grâces au fonctionnalité implémenter dans le programme.
 
 
 \subsection{Densité de l'eau en fonction de la température de l'air :}
-\label{sec:org905fcc1}
+\label{sec:orge3d46ee}
 
 Liste de points avec une précision de l'ordre de 10\textsuperscript{-5}.
 Difficultés potentielles : précisions.
@@ -407,7 +400,7 @@ Résultats : Les deux polynômes sont les mêmes et les calculs sont les bons.
 
 
 \subsection{Les trois séries :}
-\label{sec:orgedfc694}
+\label{sec:org166bc04}
 
 Suites de points normaux.
 Difficultés potentielles : aucune, sauf pour le dernier qui ne pourra sûrement pas être calculé (car ce n'est pas une suite de points avec différents \(x\))
@@ -425,7 +418,7 @@ Résultats :
 
 
 \subsection{Dépenses mensuelles et revenus :}
-\label{sec:orgcfad76a}
+\label{sec:orgd4af63f}
 
 Pour ces données, il y a un grand nombre de données, ainsi qu'un axe des x qui commence avec de "grandes valeurs".
 
@@ -436,7 +429,7 @@ Résultats :Les polynômes ont soit des coefficients très importants, soit des 
 
 
 \subsection{Commentaire global}
-\label{sec:orgc55b4ba}
+\label{sec:org2e8eac3}
 
 Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
@@ -445,58 +438,89 @@ Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
 En effet, ce dernier est souvent le même pour les deux méthodes. Évidemment, des erreurs de calculs sont présentes.
 
-\item Influence de la modification d'un ou plusieurs points donnés sur le polynôme
+\item Influence de la modification d'un ou plusieurs points donnés sur le polynôme :
 Lorsque l'on donne des points aléatoires au fur et à mesure grâce à l'implémentation de notre méthode "placer un point" pour mettre un point, on peut voir que les deux polynômes s'adaptent bien.
+
+\item Évaluation des coûts :
+Pour Newton, la complexité est de l'ordre (o)n\textsuperscript{2}, tandis que pour Lagrange, elle est de (o)n\textsuperscript{3}. 
+Vous pouvez, grâce au programme, afficher les polynômes avec une grande ou une petite précision. Si vous choisissez la méthode précise, vous aurez alors la moyenne des différences avec les points originaux, ce qui nous permet d'avoir une idée précise sur l’efficacité des méthodes.
 \end{enumerate}
 
+\newpage
+\section{SDL}
+\label{sec:org0b99c45}
+
+Le code qui nous permet de gérer la fenêtre SDL est disponible \href{render.c}{ici}.
+
+\subsection{Début}
+\label{sec:org0e5987c}
+
+Pour démarrer SDL, nous devons initialiser de nombreuses variables, comme par exemple :
+
+\begin{itemize}
+\item La variable \emph{Stape}, qui nous permet de fermer SDL si elle est égale à 0,
+\item \emph{size}, qui va nous permettre de gérer la taille de l'écran,
+\item des variables permettant de garder un nombre d'image par seconde (fps) constant et agréable
+\item des variables permettant de détecter où le curseur de la souris se trouve sur l'écran
+\item les varibles permettant de dessiner le graphique
+\item etc.
+\end{itemize}
+
+
+
+
+\subsection{Affichage et fonctionnalité}
+\label{sec:orgac376bb}
+
+\subsubsection{Affichage}
+\label{sec:orgd685c4a}
+
+Pour effectuer l'affichage d'une fenêtre SDL, nous devons passer par une boucle \emph{while}.
+
+Puis, nous distinguerons trois cas grâce à un \emph{if} (et \emph{else if}).
 
 \begin{enumerate}
-\item Évaluation des coûts (complexité, efficacité):
+\item Dans le premier cas, SDL dessinera l'écran, s'il n'a pas été dessiné depuis un certain temps
+\item Sinon, nous vérifierons également si les courbes sont en adéquation avec les polynômes. Si ce n'est pas le cas, nous entrons alors dans le \emph{else if} qui va nous permettre d'écraser l'image précédente. Enfin,
+\item si nous passons les deux conditions précédentes, nous devons \textbf{absolument} endormir le Central Processing Unit (CPU). Cela nous permet de ne pas utiliser tout le processeur de l'ordinateur.
 \end{enumerate}
 
+Puis, nous avons aussi un cas de débogage. En effet, si l'on n'est pas entré dans le while depuis une seconde ou plus, il peut y avoir un problème. On recommence alors une seconde "propre", en mettant certaines variables à 0.
 
-\section{{\bfseries\sffamily TODO} SDL}
-\label{sec:org055bcf0}
+
+
+
+
+
+
+
+\subsubsection{Fonctionnalités :}
+\label{sec:org168b791}
+
+Divers fonctionnalités sont présentes :
+Vous pouvez afficher la fenêtre grâce à la touche "g". Vous pouvez désormais voir la liste des points, les courbes représentant l'interpolation lagrangienne et newtonienne, ainsi que la liste de points à droite.
+
+De plus, si jamais vous voulez rajouter des points à la liste, cette fonctionnalité est disponible grâce au bouton gauche de la souris. Le bouton droit aura pour effet de supprimer le point sélectionné.
+
+Le curseur aura alors une position (x et y) qui sera automatiquement ajouté dans la liste des points. Les courbes ainsi que les polynômes vont s'adapter automatiquement !
+
+
+Enfin, vous pouvez zoomer et dézoomer grâce à la molette de la souris.
+
+\subsubsection{{\bfseries\sffamily TODO} Amélioration}
+\label{sec:org2adced7}
+
+Ce que t'a pas eu le temps de faire
+
+\subsection{Fin de SDL}
+\label{sec:org1ef5197}
+
+La fonction \emph{end-sdl} nous permet de fermet la fenêtre SDL proprement, ainsi que faire les opérations nécessaires pour vider la mémoire qui a besoin d'être libéré.
 
 \section{Conclusion sur les méthodes}
-\label{sec:org4fc01bf}
-
-
-\url{https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees}
+\label{sec:org8caf77c}
 
 Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
 
 En revanche, nous pourrions sûrement améliorer notre programme pour Newton : en effet, d'après la définition des différences divisées, lorsque l'on ajoute de nouveaux points, nous ne sommes pas obligés de recalculer l'ensemble des coefficients du polynôme.
-
-
-
-
-
-\section{Annexes}
-\label{sec:org9b91064}
-
-\subsection{{\bfseries\sffamily TODO} Jeux de Test}
-\label{sec:org01371bb}
-
-\subsubsection{Densité de l'eau}
-\label{sec:org2e037b0}
-
-Les résultats obtenus pour Newton sont :
-
-1.00 +  -0.94*x\textsuperscript{(1)}  +   1.62*x\textsuperscript{(2)}  +  -1.21*x\textsuperscript{(3)}  +   0.53*x\textsuperscript{(4)}  +  -0.15*x\textsuperscript{(5)}  +   0.03*x\textsuperscript{(6)}  +  -0.00*x\textsuperscript{(7)}  +   0.00*x\textsuperscript{(8)}  +  -0.00*x\textsuperscript{(9)}  +   0.00*x\textsuperscript{(10)}  +  -0.00*x\textsuperscript{(11)}  +   0.00*x\textsuperscript{(12)}  +  -0.00*x\textsuperscript{(13)}  +   0.00*x\textsuperscript{(14)}  +  -0.00*x\textsuperscript{(15)}  +   0.00*x\textsuperscript{(16)}  +  -0.00*x\textsuperscript{(17)}  +   0.00*x\textsuperscript{(18)}  +  -0.00*x\textsuperscript{(19)}
-
-Les résultats obtenus pour Lagrange sont :
-
-1.00 +  -0.94*x\textsuperscript{(1)}  +   1.62*x\textsuperscript{(2)}  +  -1.21*x\textsuperscript{(3)}  +   0.53*x\textsuperscript{(4)}  +  -0.15*x\textsuperscript{(5)}  +   0.03*x\textsuperscript{(6)}  +  -0.00*x\textsuperscript{(7)}  +   0.00*x\textsuperscript{(8)}  +  -0.00*x\textsuperscript{(9)}  +   0.00*x\textsuperscript{(10)}  +  -0.00*x\textsuperscript{(11)}  +   0.00*x\textsuperscript{(12)}  +  -0.00*x\textsuperscript{(13)}  +   0.00*x\textsuperscript{(14)}  +  -0.00*x\textsuperscript{(15)}  +   0.00*x\textsuperscript{(16)}  +  -0.00*x\textsuperscript{(17)}  +   0.00*x\textsuperscript{(18)}  +  -0.00*x\textsuperscript{(19)}  +   0.00*x\textsuperscript{(20)} 
-
-\subsubsection{S1}
-\label{sec:org160fedf}
-
-
-\subsubsection{S2}
-\label{sec:org6fe5d8c}
-\subsubsection{S3}
-\label{sec:org4a405d7}
-\subsubsection{Dépenses mensuelle et revenu}
-\label{sec:org9af7daa}
 \end{document}

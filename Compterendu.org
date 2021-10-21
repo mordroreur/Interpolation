@@ -28,17 +28,19 @@
 
 #+TOC: headlines 2 % afficher tdm ici, nombre de "sous titre", 3= va jusqu'à titre 3
 
+* Newpage :ignore:
+\newpage
+
 * Rappel rapide des méthodes
 
 
 ** Cas général des méthodes
 
-Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points $k+1$ de la forme :
+Pour les deux méthodes, le but est le même, trouver une équation avec un nombre de points $n+1$ de la forme :
 
 
 \[ P(x)= a_0 + a_1x + a_2x^2 + … + a_nx^n  \]
 
-Où l'on a $n \in [0, 1, ...k]$.
 
 
 
@@ -71,7 +73,7 @@ Pour la méthode de newton, nous devons appliquer cette formule :
 Où $n$ sont les polynômes de Newton définis de la manière
 suivante :
 
-\[ n_{i}(x)=\prod _{0\leq i&lt;i}(x-x_{j})\qquad j=0,\ldots ,k  \]
+\[ n_{i}(x)=\prod _{0\leq j < i}(x-x_{j})\qquad i=0,\ldots ,n  \]
 
 et $a_i$ définit tel que
 
@@ -79,13 +81,11 @@ et $a_i$ définit tel que
 
 Conclusion : Nous devons effectuer cette formule :
 
-\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{k}](x-x_{0})\ldots (x-x_{k-1}).}  \]
+\[  N(x)=[y_{0}]+[y_{0},y_{1}](x-x_{0})+\ldots +[y_{0},\ldots ,y_{n}](x-x_{0})\ldots (x-x_{n}).}  \]
 
 * Présentation des programmes commentés
 
 Nous ne mettrons pas l'intégralité du code des différentes résolutions, mais ils sont consultables [[file:lagrange.c][ici pour la méthode de Lagrange]], ainsi qu'[[file:newton.c][ici pour la méthode Newton]].
-
-
 
 ** Nos structures
 
@@ -113,7 +113,7 @@ La structure des points est donc la suivante :
     
 #+end_src
 
-Puis, nous voulons rassembler ses points en des TODO, nous avons donc besoin de deux structures supplémentaires : la structure /Maillon/ et la struture /Liste/. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
+Puis, nous voulons rassembler ses points en des listes, nous avons donc besoin de deux structures supplémentaires : la structure /Maillon/ et la struture /Liste/. Ces deux structures permettent de structurer nos données, les utiliser, et les afficher dans des graphiques.
 
 #+begin_src C
     
@@ -293,13 +293,13 @@ En effet, pour compléter la méthode de Lagrange, il faut faire une boucle /for
 
 Il ne reste plus qu'à retourner le polynôme trouver pour pouvoir l'afficher ou bien même l'utiliser dans SDL.
 
-** TODO Présentation de la méthode de Newton
+** Présentation de la méthode de Newton
 
 
+Le code pour l'interpolation newtonienne est disponible [[file:newton.c][ici.]]
 
 
-
-Pour la velléité par Newton, nous commençons tout d'abord par initialiser un tableau de la taille adéquate pour nous permettre de stocker les différences divisées.
+Pour la résolution par Newton, nous commençons tout d'abord par initialiser un tableau de la taille adéquate pour nous permettre de stocker les différences divisées.
 
 #+begin_src C
   
@@ -311,7 +311,7 @@ Pour la velléité par Newton, nous commençons tout d'abord par initialiser un 
   
 #+end_src
 
-Puis, on remplit la première colonne avec les ordonnées des points.
+Puis, nous remplissons la première colonne avec les ordonnées des points.
 
 #+begin_src C
 for(int i = 0; i < pointNB; i++)  
@@ -321,7 +321,7 @@ for(int i = 0; i < pointNB; i++)
   
 #+end_src
 
-Après, nous pouvons effectué le calcul des différences divisées en appliquant la formule du cours
+Subséquemment, nous pouvons effectuer le calcul des différences divisées en appliquant la formule du cours
 
 #+begin_src C
   
@@ -333,17 +333,8 @@ Après, nous pouvons effectué le calcul des différences divisées en appliquan
   
 #+end_src
 
-Subséquemment, si le polynôme renvoie null, alors nous 
-#+begin_src C
-  
-  if(pointNB != 0){
-    Solution->p[0] = triangle[pointNB-1][0];
-  }
-  
-#+end_src
-
-
-Enfin, nous pouvons passer à la résolution résolution finale, qui elle aussi est issue du cours
+ 
+Enfin, nous pouvons passer à la résolution résolution finale, qui elle aussi est issue du cours.
 #+begin_src C
   
   for(int i = 0; i < pointNB-1; i++){
@@ -360,11 +351,11 @@ Enfin, nous pouvons passer à la résolution résolution finale, qui elle aussi 
   
 #+end_src
 
-Enfin, nous retournons le polynôme obtenu pour pouvoir l'afficher  dans le terminal, où sous une courbe avec SDL.
+Il ne nous reste plus qu'à retourner le polynôme obtenu pour pouvoir l'afficher  dans le terminal, où sous une courbe avec SDL.
 
 * Présentation des Jeux d'essais avec commentaires
 
-Les différents résultats complet sont disponibles en annexe [[*Jeux de Test][ici]].
+Les différents résultats sont disponibles en faisant les test grâces au fonctionnalité implémenter dans le programme.
 
 
 ** Densité de l'eau en fonction de la température de l'air :
@@ -392,7 +383,7 @@ Résultats :
 
   3. Ne peut pas se calculer : en effet, les points sont sur le même X. L'interpolation est donc incalculable (et infaisable).
 
-
+     
 ** Dépenses mensuelles et revenus :
 
 Pour ces données, il y a un grand nombre de données, ainsi qu'un axe des x qui commence avec de "grandes valeurs".
@@ -411,99 +402,79 @@ Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
    En effet, ce dernier est souvent le même pour les deux méthodes. Évidemment, des erreurs de calculs sont présentes.
    
-2. Influence de la modification d'un ou plusieurs points donnés sur le polynôme
+2. Influence de la modification d'un ou plusieurs points donnés sur le polynôme :
    Lorsque l'on donne des points aléatoires au fur et à mesure grâce à l'implémentation de notre méthode "placer un point" pour mettre un point, on peut voir que les deux polynômes s'adaptent bien.
 
+3. Évaluation des coûts :
+   Pour Newton, la complexité est de l'ordre (o)n^2, tandis que pour Lagrange, elle est de (o)n^3. 
+   Vous pouvez, grâce au programme, afficher les polynômes avec une grande ou une petite précision. Si vous choisissez la méthode précise, vous aurez alors la moyenne des différences avec les points originaux, ce qui nous permet d'avoir une idée précise sur l’efficacité des méthodes.
 
-3. Évaluation des coûts (complexité, efficacité):   
-   
-   
-* TODO SDL
+* Newpage :ignore:
+\newpage
+* SDL
+
+Le code qui nous permet de gérer la fenêtre SDL est disponible [[file:render.c][ici]].
 
 ** Début
-Initialsisation des variables
-Stape : sort du jeu si 0
-size : taille de l'écran
 
-Les deux poly
+Pour démarrer SDL, nous devons initialiser de nombreuses variables, comme par exemple :
 
-pour le 60 fps
-#+begin_src C
-  
-  long int LastFrame;
-  long int TimeCount;
-  long int NowTime;
-  long int timeForNewFrame = 1000000/FPS_TO_GET;
-  
-  int fpsCount = 0;
-
-  long int LastTick;
-  long int timeForNewTick = 1000000/TICK_TO_GET;
-  
-  int tickCount = 0;
-  
-#+end_src
-souris lieu de la soris
-done savoir si le graph est affiché
-
-SDL_Texture (image)  *Graph; : image du graph
+- La variable /Stape/, qui nous permet de fermer SDL si elle est égale à 0,
+- /size/, qui va nous permettre de gérer la taille de l'écran,
+- des variables permettant de garder un nombre d'image par seconde (fps) constant et agréable
+- des variables permettant de détecter où le curseur de la souris se trouve sur l'écran
+- les varibles permettant de dessiner le graphique
+- etc. 
 
 
-Récupérer les évenement (avec event quit)
-#+begin_src C
-  
-  SDL_Event event;
-  SDL_Renderer *renderer = NULL;
-  
-#+end_src
-
-Graph
-#+begin_src C
-  
-  /* début */
-  int graphXdeb = -10;
-  int graphYdeb = -10;
-  
-  
-  /* taille */
-  int graphXS = 20;
-  int graphYS = 20;
-  
-#+end_src
 
 
-Initialisation
-#+begin_src C
-  
-  create_Win(&renderer, window, &SizeX, &SizeY, &Graph);  
-  
-#+end_src
+** Affichage et fonctionnalité
 
-Taille de écran fournit par SDL
+*** Affichage
 
-#+begin_src C
-  
-  SDL_GetWindowSize(window, SX, SY);
-  
-#+end_src
+Pour effectuer l'affichage d'une fenêtre SDL, nous devons passer par une boucle /while/.
 
-TTF_Font pour choisir la police
+Puis, nous distinguerons trois cas grâce à un /if/ (et /else if/).
 
-#+begin_src C
-  
-  TTF_Font *Font = TTF_OpenFont("Res/Quicksilver.ttf", 50);
-  
-#+end_src
+1. Dans le premier cas, SDL dessinera l'écran, s'il n'a pas été dessiné depuis un certain temps
+2. Sinon, nous vérifierons également si les courbes sont en adéquation avec les polynômes. Si ce n'est pas le cas, nous entrons alors dans le /else if/ qui va nous permettre d'écraser l'image précédente. Enfin,
+3. si nous passons les deux conditions précédentes, nous devons *absolument* endormir le Central Processing Unit (CPU). Cela nous permet de ne pas utiliser tout le processeur de l'ordinateur.
+
+Puis, nous avons aussi un cas de débogage. En effet, si l'on n'est pas entré dans le while depuis une seconde ou plus, il peut y avoir un problème. On recommence alors une seconde "propre", en mettant certaines variables à 0.
 
 
-** Méthod M
 
-** Autres 
+
+
+
+
+
+*** Fonctionnalités :
+
+Divers fonctionnalités sont présentes :
+Vous pouvez afficher la fenêtre grâce à la touche "g". Vous pouvez désormais voir la liste des points, les courbes représentant l'interpolation lagrangienne et newtonienne, ainsi que la liste de points à droite.
+
+De plus, si jamais vous voulez rajouter des points à la liste, cette fonctionnalité est disponible grâce au bouton gauche de la souris. Le bouton droit aura pour effet de supprimer le point sélectionné.
+
+Le curseur aura alors une position (x et y) qui sera automatiquement ajouté dans la liste des points. Les courbes ainsi que les polynômes vont s'adapter automatiquement !
+
+
+Enfin, vous pouvez zoomer et dézoomer grâce à la molette de la souris.
+
+*** TODO Amélioration
+
+Ce que t'a pas eu le temps de faire
+
+** Fin de SDL
+
+La fonction /end-sdl/ nous permet de fermet la fenêtre SDL proprement, ainsi que faire les opérations nécessaires pour vider la mémoire qui a besoin d'être libéré.
 
 * Conclusion sur les méthodes
 
+** Site cool : [[https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees][ici]] :noexport: 
 
-https://math-linux.com/mathematiques/interpolation/article/interpolation-polynomiale-de-type-newton-et-differences-divisees
+** Le reste :ignore:
 
 Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
 
@@ -513,9 +484,9 @@ En revanche, nous pourrions sûrement améliorer notre programme pour Newton : e
 
 
 
-* Annexes
+* Annexes  :noexport: 
 
-** TODO Jeux de Test
+** Jeux de Test
 
 *** Densité de l'eau
 
