@@ -47,7 +47,7 @@ int main()
     switch (choix)
     {
     case 'h':
-      printf("    h : Afficher cette aide.\n    g : Ouvre une fenêtre graphique (TODO : all).\n    f : Remplir automatiquement.\n    n : Applique l'interpolation de Newton.\n    l : applique l'interpolation de lagrange.\n    m : Applique l'interpolation de Newton avec un affichage précis.\n    l : applique l'interpolation de lagrange avec un affichage précis.\n    r : Permet de remplir des points.\n    a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
+      printf("    h : Afficher cette aide.\n    g : Ouvre une fenêtre graphique.\n    f : Remplir automatiquement.\n    n : Applique l'interpolation de Newton.\n    l : applique l'interpolation de lagrange.\n    m : Applique l'interpolation de Newton avec un affichage précis.\n    l : applique l'interpolation de lagrange avec un affichage précis.\n    r : Permet de remplir des points.\n    a : affiche la liste des points actuelles.\n    q : Quitter.\n\n");
       break;
     case 'g':RenderingInterpolation(&listePoints);break;
     case 'f':casAutoFill(&listePoints);break;

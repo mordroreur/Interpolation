@@ -323,7 +323,9 @@ Liste *RenderingInterpolation(Liste *l)
               ajouteFin(l, p);
               done = 0;
             }
-          }
+          }else if(sourisX > (6*SizeX/8) + SizeX/100 && sourisX < (6*SizeX/8) + SizeX/100 + SizeX/9 && sourisY > (SizeY/8) + (SizeY*10/25) && sourisY < (SizeY/8) + (SizeY*10/25) + SizeY*2/25){
+	    Stape = 0;
+	  }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
         {
@@ -705,10 +707,11 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
   for(int i = SY/25; i < (7*SY)/8; i+= SY/25){
     SDL_RenderDrawLine(renderer, (SX*7)/8+ (SX/50), i, SX, i);
   }
-  
 
 
-  
+
+
+
   // affiche la liste des points
   sprintf(s, "X    Y");
   surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
@@ -736,53 +739,27 @@ void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr
   }
 
 
-  // Ajoute un point avec precision :
-
-  sprintf(s, "Ajouter :");
-  surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
-  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-  Message_rect.x = (SX*6)/8 + (SX/100); 
-  Message_rect.y = (SY/100) + 15*SY/25; 
-  Message_rect.w = (SX/11);
-  Message_rect.h = SY/25; 
-  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-  SDL_FreeSurface(surfaceMessage);
-  SDL_DestroyTexture(Message);
-  sprintf(s, "%s", StringX);
-  surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
-  Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-  Message_rect.x = (SX*6)/8 + (SX/100); 
-  Message_rect.y = (SY/100) + 16*SY/25;
-  int valeurXtemporaireNonReutilisable = (SX/11);
-  for(int i = 0; i < 4; i++){
-    if(StringX[i] == '\0'){
-      valeurXtemporaireNonReutilisable = i*(SX/50);
-      break;
-    }
+  //Bouton exit
+  if(posMX > (6*SX/8) + SX/100 && posMX < (6*SX/8) + SX/100 + SX/9 && posMY > (SY/8) + (SY*10/25) && posMY < (SY/8) + (SY*10/25) + SY*2/25){
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+  }else {
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
   }
-  Message_rect.w = valeurXtemporaireNonReutilisable;
-  Message_rect.h = SY/25; 
-  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-  SDL_FreeSurface(surfaceMessage);
-  SDL_DestroyTexture(Message);
-  sprintf(s, "%s", StringY);
+  rectangle.x = (6*SX/8) + SX/100;
+  rectangle.y = (SY/8) + (SY*10/25);
+  rectangle.w = SX/9;
+  rectangle.h = SY*2/25;
+  SDL_RenderFillRect(renderer, &rectangle);
+  sprintf(s, "Exit");
   surfaceMessage = TTF_RenderText_Solid(Font, s, Dark); 
   Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
   Message_rect.x = (SX*6)/8 + (SX/100); 
-  Message_rect.y = (SY/100) + 17*SY/25;
-  valeurXtemporaireNonReutilisable = (SX/11);
-  for(int i = 0; i < 4; i++){
-    if(StringY[i] == '\0'){
-      valeurXtemporaireNonReutilisable = i*(SX/50);
-      break;
-    }
-  }
-  Message_rect.w = valeurXtemporaireNonReutilisable;
-  Message_rect.h = SY/25; 
+  Message_rect.y = (SY/8) + (SY*10/25) + (SY/100); 
+  Message_rect.w = (SX/9);
+  Message_rect.h = SY*3/50; 
   SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
   SDL_FreeSurface(surfaceMessage);
   SDL_DestroyTexture(Message);
-
   
   
 
