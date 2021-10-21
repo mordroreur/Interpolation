@@ -8,23 +8,20 @@
 #ifndef RENDER_HEADER_
 #define RENDER_HEADER_
 
-
 #include "lagrange.h"
-#include "newton.h"
 #include "listePoint.h"
+#include "newton.h"
 #include "polynome.h"
 
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
-#include <time.h>
+#include <SDL2/SDL_ttf.h>
 #include <math.h>
+#include <time.h>
 
-#define FPS_TO_GET 60 /*!< Frames render per second*/
+#define FPS_TO_GET 60  /*!< Frames render per second*/
 #define TICK_TO_GET 60 /*!< Verification done per second*/
 
-
 Liste *RenderingInterpolation(Liste *l);
-
 
 /**
  * \fn void create_Win(SDL_Renderer **renderer)
@@ -33,7 +30,8 @@ Liste *RenderingInterpolation(Liste *l);
  * \param **renderer l'adresse de laffichage dans la fenêtre
  * \return void
  */
-void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY, SDL_Texture  **Graph);
+void create_Win(SDL_Renderer **renderer, SDL_Window *window, int *SX, int *SY,
+                SDL_Texture **Graph);
 
 /**
  * \fn void end_sdl(char ok, char const * msg, SDL_Window *window, SDL_Renderer
@@ -68,11 +66,13 @@ void keyUp(SDL_KeyboardEvent *key, int *Stape);
  * \fn void draw(SDL_Renderer *renderer)
  * \brief Dessin de l'écran de bug dans la fenetre
  *
- * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut redessiner
- * \return void
+ * \param *renderer l'adresse de l'intérieur de la fenetre que l'on veut
+ * redessiner \return void
  */
-void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt, polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l, TTF_Font* Font, int TXdeb, int TYdeb, int TXfin, int TYfin, SDL_Texture  *Graph, char *StringX, char *StringY, int pointeurWriteEmp);
-
-
+void draw(SDL_Renderer *renderer, int SX, int SY, polynome *newt,
+          polynome *lagr, Liste pointNewt, Liste pointLagr, Liste l,
+          TTF_Font *Font, int TXdeb, int TYdeb, int TXfin, int TYfin,
+          SDL_Texture *Graph, char *StringX, char *StringY,
+          int pointeurWriteEmp);
 
 #endif /* RENDER_HEADER_ */

@@ -8,21 +8,6 @@
 
 #include "lagrange.h"
 
-float **untableaudepoint(int taille)
-{
-  int i, j;
-  float **res = (float **)malloc(2 * sizeof(float *));
-  res[0] = (float *)malloc(taille * sizeof(float));
-  res[1] = (float *)malloc(taille * sizeof(float));
-
-  for (i = 0; i < taille; ++i)
-  {
-    res[0][i] = i;
-    res[1][i] = i;
-  }
-  return res;
-}
-
 /**
  * \fn Liste calculLi(int numero,Liste points)
  * \brief Function that find Li to resolve an interpolation with the Lagrange
