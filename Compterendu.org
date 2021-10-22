@@ -417,7 +417,7 @@ Pour ses différents jeux d'essais, on peut constater plusieurs choses :
 
 1. L'unicité du polynôme obtenu
 
-   En effet, ce dernier est souvent le même pour les deux méthodes. Évidemment, des erreurs de calculs sont présentes.
+   En effet, ce dernier est souvent le même pour les deux méthodes. Évidemment, des approximations de calcul sont présentes.
    
 2. Influence de la modification d'un ou plusieurs points donnés sur le polynôme :
    Lorsque l'on donne des points aléatoires au fur et à mesure grâce à l'implémentation de notre méthode "placer un point" pour mettre un point, on peut voir que les deux polynômes s'adaptent bien.
@@ -479,9 +479,6 @@ Le curseur aura alors une position (x et y) qui sera automatiquement ajouté dan
 
 Enfin, vous pouvez zoomer et dézoomer grâce à la molette de la souris.
 
-*** TODO Amélioration
-
-Ce que t'a pas eu le temps de faire
 
 ** Fin de SDL
 
@@ -493,9 +490,10 @@ La fonction /end-sdl/ nous permet de fermet la fenêtre SDL proprement, ainsi qu
 
 ** Le reste :ignore:
 
-Malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
+Nous pourrions sûrement améliorer notre programme pour Newton : en effet, d'après la définition des différences divisées, lorsque l'on ajoute de nouveaux points, nous ne sommes pas obligés de recalculer l'ensemble des coefficients du polynôme.
 
-En revanche, nous pourrions sûrement améliorer notre programme pour Newton : en effet, d'après la définition des différences divisées, lorsque l'on ajoute de nouveaux points, nous ne sommes pas obligés de recalculer l'ensemble des coefficients du polynôme.
+
+En revanche, malgré la différence de programme et de méthode utilisé, les méthodes nous amènent au même résultat (hors approximation des calculs). En effet, les polynômes, grâce aux jeux de données, sont trés proches et passent par les différents points donnés (voir fenêtre graphique SDL).
 
 
 
